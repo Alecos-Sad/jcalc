@@ -2,10 +2,15 @@ package edu.javagroup.jcalc.digits;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+/**
+ * Используется для округления числа
+ *
+ * @author SadovNick
+ */
 
 public class Round {
-    //метод принимает число, которое округляет до двух
 
+    /** количество знаков после запятой */
     public static final int CONST_ROUND = 2;
 
     public static double round(double value) {

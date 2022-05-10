@@ -2,6 +2,12 @@ package edu.javagroup.jcalc.digits;
 
 import edu.javagroup.jcalc.lines.LineParsing;
 
+/**
+ * Используется для вычисления суммы двух чисел
+ *
+ * @author SadovNick
+ */
+
 public class Addition {
 
     public static String addition(String firstsStr, String secondStr) {
