@@ -26,7 +26,7 @@ public class LineParsing {
         return Double.parseDouble(str);
     }
 
-    public static boolean isFinalNumber(String str){
+    public static boolean isFinalNumber(String str) {
         return false;
     }
 
