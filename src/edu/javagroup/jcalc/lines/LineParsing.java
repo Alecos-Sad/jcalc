@@ -9,13 +9,13 @@ public class LineParsing {
         }
 
         if ((str.contains("*")) || (str.contains("/"))) {
-            return  findFirstMathSymbol(str, 1);
+            return findFirstMathSymbol(str, 1);
         }
         if ((str.contains("+")) || (str.contains("-"))) {
             return findFirstMathSymbol(str, 2);
 
         }
-            return "";
+        return "";
     }
 
     public static String findFirstMathSymbol(String string, int priority) {
