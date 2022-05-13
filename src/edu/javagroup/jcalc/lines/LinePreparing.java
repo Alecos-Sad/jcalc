@@ -2,7 +2,7 @@ package edu.javagroup.jcalc.lines;
 
 public class LinePreparing {
 
-    public String linePreparing (String str){
+    public static String linePreparing (String str){
         return "";
     }
 

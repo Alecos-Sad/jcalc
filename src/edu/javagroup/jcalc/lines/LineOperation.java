@@ -14,8 +14,21 @@ public class LineOperation {
         return sourceOne.concat(sourceTwo);
     }
 
-    public static String getResult(String str) {
-        return "";
+    private static String getResult(String source) {
+        if (source == null || source.isEmpty()) {
+            return "";
+        } else {
+            source = LinePreparing.linePreparing(source);
+            if (LineCheck.isLineCorrect(source)) {
+                if (LineParsing.isFinalNumber(source)) {
+                    return source;
+                }
+                return source = (source.contains("(") || source.contains(")")) ?
+                        getResultWithRoundBrackets(source) :
+                        getResultWithoutRoundBrackets(source);
+            }
+            return source;
+        }
     }
 
     public static String getResultWithRoundBrackets(String str) {
