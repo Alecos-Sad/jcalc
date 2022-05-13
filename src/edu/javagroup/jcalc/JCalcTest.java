@@ -175,64 +175,64 @@ public class JCalcTest {
     private void testAddition(Class testClass) {
         System.out.println("--- " + testClass.getSimpleName() + " ---");
 
-        String result1 = (String) testMethod(testClass, "addition", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"3", "2"});
+        String result1 = (String) testMethod(testClass, "addition", new Class[]{String.class, String.class}, new Object[]{"3", "2"});
         System.out.println("Метод: addition - отправлено: 3 + 2, получено: " + result1 + " => " + ("5".equals(result1) ? "УСПЕХ" : "ПРОВАЛ"));
 
-        String result2 = (String) testMethod(testClass, "addition", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"3", "2.34"});
+        String result2 = (String) testMethod(testClass, "addition", new Class[]{String.class, String.class}, new Object[]{"3", "2.34"});
         System.out.println("Метод: addition - отправлено: 3 + 2.34, получено + " + result2 + " => " + ("5.34".equals(result2) ? "УСПЕХ" : "ПРОВАЛ"));
 
-        String result3 = (String) testMethod(testClass, "addition", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"3.34", "2"});
+        String result3 = (String) testMethod(testClass, "addition", new Class[]{String.class, String.class}, new Object[]{"3.34", "2"});
         System.out.println("Метод: addition - отправлено: 3.34 + 2, получено + " + result3 + " => " + ("5.34".equals(result3) ? "УСПЕХ" : "ПРОВАЛ"));
 
-        String result4 = (String) testMethod(testClass, "addition", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"3.34", "2.11"});
+        String result4 = (String) testMethod(testClass, "addition", new Class[]{String.class, String.class}, new Object[]{"3.34", "2.11"});
         System.out.println("Метод: addition - отправлено: 3.34 + 2.11, получено + " + result4 + " => " + ("5.45".equals(result4) ? "УСПЕХ" : "ПРОВАЛ"));
     }
 
     private void testDivision(Class testClass) {
         System.out.println("--- " + testClass.getSimpleName() + " ---");
 
-        String result1 = (String) testMethod(testClass, "division", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"5", "3"});
+        String result1 = (String) testMethod(testClass, "division", new Class[]{String.class, String.class}, new Object[]{"5", "3"});
         System.out.println("Метод: division - отправлено: 5 / 3, получено: " + result1 + " => " + ("1.67".equals(result1) ? "УСПЕХ" : "ПРОВАЛ"));
 
-        String result2 = (String) testMethod(testClass, "division", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"2", "1.1"});
+        String result2 = (String) testMethod(testClass, "division", new Class[]{String.class, String.class}, new Object[]{"2", "1.1"});
         System.out.println("Метод: division - отправлено: 2 / 1.1, получено + " + result2 + " => " + ("1.82".equals(result2) ? "УСПЕХ" : "ПРОВАЛ"));
 
-        String result3 = (String) testMethod(testClass, "division", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"2.2", "3"});
+        String result3 = (String) testMethod(testClass, "division", new Class[]{String.class, String.class}, new Object[]{"2.2", "3"});
         System.out.println("Метод: division - отправлено: 2.2 / 3, получено + " + result3 + " => " + ("0.73".equals(result3) ? "УСПЕХ" : "ПРОВАЛ"));
 
-        String result4 = (String) testMethod(testClass, "division", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"54.22", "18.02"});
+        String result4 = (String) testMethod(testClass, "division", new Class[]{String.class, String.class}, new Object[]{"54.22", "18.02"});
         System.out.println("Метод: division - отправлено: 54.22 / 18.02, получено + " + result4 + " => " + ("3.01".equals(result4) ? "УСПЕХ" : "ПРОВАЛ"));
     }
 
     private void testMultiplication(Class testClass) {
         System.out.println("--- " + testClass.getSimpleName() + " ---");
 
-        String result1 = (String) testMethod(testClass, "multiplication", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"5", "3"});
+        String result1 = (String) testMethod(testClass, "multiplication", new Class[]{String.class, String.class}, new Object[]{"5", "3"});
         System.out.println("Метод: multiplication - отправлено: 5 * 3, получено: " + result1 + " => " + ("15".equals(result1) ? "УСПЕХ" : "ПРОВАЛ"));
 
-        String result2 = (String) testMethod(testClass, "multiplication", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"2", "1.1"});
+        String result2 = (String) testMethod(testClass, "multiplication", new Class[]{String.class, String.class}, new Object[]{"2", "1.1"});
         System.out.println("Метод: multiplication - отправлено: 2 * 1.1, получено + " + result2 + " => " + ("2.2".equals(result2) ? "УСПЕХ" : "ПРОВАЛ"));
 
-        String result3 = (String) testMethod(testClass, "multiplication", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"2.2", "3"});
+        String result3 = (String) testMethod(testClass, "multiplication", new Class[]{String.class, String.class}, new Object[]{"2.2", "3"});
         System.out.println("Метод: multiplication - отправлено: 2.2 * 3, получено + " + result3 + " => " + ("6.6".equals(result3) ? "УСПЕХ" : "ПРОВАЛ"));
 
-        String result4 = (String) testMethod(testClass, "multiplication", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"54.22", "18.02"});
+        String result4 = (String) testMethod(testClass, "multiplication", new Class[]{String.class, String.class}, new Object[]{"54.22", "18.02"});
         System.out.println("Метод: multiplication - отправлено: 54.22 * 18.02, получено + " + result4 + " => " + ("977.04".equals(result4) ? "УСПЕХ" : "ПРОВАЛ"));
     }
 
     private void testSubtraction(Class testClass) {
         System.out.println("--- " + testClass.getSimpleName() + " ---");
 
-        String result1 = (String) testMethod(testClass, "subtraction", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"5", "3"});
+        String result1 = (String) testMethod(testClass, "subtraction", new Class[]{String.class, String.class}, new Object[]{"5", "3"});
         System.out.println("Метод: subtraction - отправлено: 5 - 3, получено: " + result1 + " => " + ("2".equals(result1) ? "УСПЕХ" : "ПРОВАЛ"));
 
-        String result2 = (String) testMethod(testClass, "subtraction", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"2", "1.1"});
+        String result2 = (String) testMethod(testClass, "subtraction", new Class[]{String.class, String.class}, new Object[]{"2", "1.1"});
         System.out.println("Метод: subtraction - отправлено: 2 - 1.1, получено + " + result2 + " => " + ("0.9".equals(result2) ? "УСПЕХ" : "ПРОВАЛ"));
 
-        String result3 = (String) testMethod(testClass, "subtraction", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"2.2", "3"});
+        String result3 = (String) testMethod(testClass, "subtraction", new Class[]{String.class, String.class}, new Object[]{"2.2", "3"});
         System.out.println("Метод: subtraction - отправлено: 2.2 - 3, получено + " + result3 + " => " + ("-0.8".equals(result3) ? "УСПЕХ" : "ПРОВАЛ"));
 
-        String result4 = (String) testMethod(testClass, "subtraction", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"54.22", "18.02"});
+        String result4 = (String) testMethod(testClass, "subtraction", new Class[]{String.class, String.class}, new Object[]{"54.22", "18.02"});
         System.out.println("Метод: subtraction - отправлено: 54.22 - 18.02, получено + " + result4 + " => " + ("36.2".equals(result4) ? "УСПЕХ" : "ПРОВАЛ"));
     }
 
