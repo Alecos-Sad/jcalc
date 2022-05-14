@@ -37,11 +37,71 @@ public class LineParsing {
     }
 
 
-    public String getNumberFromLeftPart(String str, int coordinate) {
+    public static String getNumberFromLeftPart(String string, int position) {
+
+        string = string.substring(0, position);
+
+        if (string.contains(")")) {
+
+            for (int i = string.length() - 1; i >= 0; i--) {
+                if (string.charAt(i) == ')') {
+                    string = string.substring(0, i + 1);
+                    break;
+                }
+            }
+        }
+
+        if (string.contains("("))
+            for (int j = 0; j < string.length(); j++) {
+                if (string.charAt(j) == '(') {
+
+                    string = string.substring(j + 1, string.length() - 1);
+
+                    return string;
+                }
+            }
+        for (int j = string.length() - 1; j > 0; j--) {
+            if ((string.charAt(j) == '-') || (string.charAt(j) == '/') ||
+                    (string.charAt(j) == '+') || (string.charAt(j) == '*')) {
+                string = string.substring(j + 1);
+                return string;
+            }
+        }
         return "";
     }
 
-    public String getNumberFromRightPart(String str, int coordinate) {
+    public static String getNumberFromRightPart(String string, int position) {
+
+        string = string.substring(position + 1);
+
+        if (string.contains("(")) {
+
+            for (int i = 0; i < string.length(); i++) {
+                if (string.charAt(i) == '(') {
+                    string = string.substring(i + 1);
+                    break;
+                }
+            }
+        }
+
+        if (string.contains(")"))
+            for (int j = 0; j < string.length(); j++) {
+                if (string.charAt(j) == ')') {
+
+                    string = string.substring(0, j);
+
+                    return string;
+                }
+            }
+        for (int j = 0; j < string.length() - 1; j++) {
+            if ((string.charAt(j) == '-') || (string.charAt(j) == '/') ||
+                    (string.charAt(j) == '+') || (string.charAt(j) == '*')) {
+
+                string = string.substring(0, j);
+
+                return string;
+            }
+        }
         return "";
     }
 
