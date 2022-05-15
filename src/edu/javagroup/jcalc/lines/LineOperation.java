@@ -23,7 +23,7 @@ public class LineOperation {
                 if (LineParsing.isFinalNumber(source)) {
                     return source;
                 }
-                return source = (source.contains("(") || source.contains(")")) ?
+                return (source.contains("(") || source.contains(")")) ?
                         getResultWithRoundBrackets(source) :
                         getResultWithoutRoundBrackets(source);
             }

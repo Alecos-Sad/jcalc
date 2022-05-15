@@ -113,9 +113,33 @@ public class LineParsing {
         return Double.parseDouble(str);
     }
 
-    public static boolean isFinalNumber(String str) {
-        return false;
+    public static boolean isFinalNumber(String string) {
+        for (int i = 0; i < string.length(); i++) {
+            if (!(Character.isDigit(string.charAt(i)) || !(string.charAt(i) == '-') ||
+                    !(string.charAt(i) == '.'))) {
+                return false;
+            }
+            if (string.startsWith("-")) {
+                string = string.substring(1);
+
+            }
+            if ((string.startsWith(".")) || string.endsWith(".")) {
+               return false;
+            }
+            int count = 0;
+            for (i = 0; i < string.length(); i++) {
+                if (string.charAt(i) == '.') {
+                    count = count + 1;
+                    if (count > 1) {
+                        break;
+                    }
+                }
+            }
+        }
+        return true;
     }
-
-
 }
+
+
+
+

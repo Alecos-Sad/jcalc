@@ -5,13 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author kaa
- * @version 2.0
+ * @version 3.0
  */
 public class JCalcTest {
 
@@ -103,7 +102,7 @@ public class JCalcTest {
 
     public void startTest() {
         if (!CLASS_MAP.isEmpty()) {
-            System.out.println("--- Выбери класс ---");
+            System.out.println("--- Выбери класс ---------------------------------------------");
             for (Map.Entry<String, Class> item : CLASS_MAP.entrySet()) {
                 System.out.println(item.getKey() + " - " + item.getValue().getSimpleName());
             }
@@ -135,28 +134,20 @@ public class JCalcTest {
                 testRound(testClass);
                 break;
             case "Addition":
-                testAddition(testClass);
-                break;
             case "Division":
-                testDivision(testClass);
-                break;
             case "Multiplication":
-                testMultiplication(testClass);
-                break;
             case "Subtraction":
-                testSubtraction(testClass);
+                testMathClasses(testClass);
                 break;
             case "LineCheck":
                 testLineCheck(testClass);
                 break;
-            case "LineOperation":
-                testLineOperation(testClass);
-                break;
             case "LineParsing":
                 testLineParsing(testClass);
                 break;
+            case "LineOperation":
             case "LinePreparing":
-                testLinePreparing(testClass);
+                testStringUtilsClass(testClass);
                 break;
             default:
                 System.out.println("Не найден искомый класс для теста методов");
@@ -166,232 +157,43 @@ public class JCalcTest {
     //------------------------------------------------------------------------------------------------------------------
 
     private void testRound(Class testClass) {
-        System.out.println("--- " + testClass.getSimpleName() + " ---");
-
-        Double result1 = (Double) testMethod(testClass, "round", new Object[]{1.10601});
-        System.out.println("Метод: round - отправлено: 1.10601, получено: " + result1 + " => " + (result1 != null && result1 == 1.11 ? "УСПЕХ" : "ПРОВАЛ"));
+        System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
+        Double result = (Double) testMethod(testClass, "round", new Object[]{1.10601});
+        System.out.println("Метод: round, отправлено: '1.10601', получено: '" + result + "', ожидаем: '1.11' => " + (result != null && result == 1.11 ? "УСПЕХ" : "ПРОВАЛ"));
     }
 
-    private void testAddition(Class testClass) {
-        System.out.println("--- " + testClass.getSimpleName() + " ---");
-
-        String result1 = (String) testMethod(testClass, "addition", new Class[]{String.class, String.class}, new Object[]{"3", "2"});
-        System.out.println("Метод: addition - отправлено: 3 + 2, получено: " + result1 + " => " + ("5".equals(result1) ? "УСПЕХ" : "ПРОВАЛ"));
-
-        String result2 = (String) testMethod(testClass, "addition", new Class[]{String.class, String.class}, new Object[]{"3", "2.34"});
-        System.out.println("Метод: addition - отправлено: 3 + 2.34, получено + " + result2 + " => " + ("5.34".equals(result2) ? "УСПЕХ" : "ПРОВАЛ"));
-
-        String result3 = (String) testMethod(testClass, "addition", new Class[]{String.class, String.class}, new Object[]{"3.34", "2"});
-        System.out.println("Метод: addition - отправлено: 3.34 + 2, получено + " + result3 + " => " + ("5.34".equals(result3) ? "УСПЕХ" : "ПРОВАЛ"));
-
-        String result4 = (String) testMethod(testClass, "addition", new Class[]{String.class, String.class}, new Object[]{"3.34", "2.11"});
-        System.out.println("Метод: addition - отправлено: 3.34 + 2.11, получено + " + result4 + " => " + ("5.45".equals(result4) ? "УСПЕХ" : "ПРОВАЛ"));
-    }
-
-    private void testDivision(Class testClass) {
-        System.out.println("--- " + testClass.getSimpleName() + " ---");
-
-        String result1 = (String) testMethod(testClass, "division", new Class[]{String.class, String.class}, new Object[]{"5", "3"});
-        System.out.println("Метод: division - отправлено: 5 / 3, получено: " + result1 + " => " + ("1.67".equals(result1) ? "УСПЕХ" : "ПРОВАЛ"));
-
-        String result2 = (String) testMethod(testClass, "division", new Class[]{String.class, String.class}, new Object[]{"2", "1.1"});
-        System.out.println("Метод: division - отправлено: 2 / 1.1, получено + " + result2 + " => " + ("1.82".equals(result2) ? "УСПЕХ" : "ПРОВАЛ"));
-
-        String result3 = (String) testMethod(testClass, "division", new Class[]{String.class, String.class}, new Object[]{"2.2", "3"});
-        System.out.println("Метод: division - отправлено: 2.2 / 3, получено + " + result3 + " => " + ("0.73".equals(result3) ? "УСПЕХ" : "ПРОВАЛ"));
-
-        String result4 = (String) testMethod(testClass, "division", new Class[]{String.class, String.class}, new Object[]{"54.22", "18.02"});
-        System.out.println("Метод: division - отправлено: 54.22 / 18.02, получено + " + result4 + " => " + ("3.01".equals(result4) ? "УСПЕХ" : "ПРОВАЛ"));
-    }
-
-    private void testMultiplication(Class testClass) {
-        System.out.println("--- " + testClass.getSimpleName() + " ---");
-
-        String result1 = (String) testMethod(testClass, "multiplication", new Class[]{String.class, String.class}, new Object[]{"5", "3"});
-        System.out.println("Метод: multiplication - отправлено: 5 * 3, получено: " + result1 + " => " + ("15".equals(result1) ? "УСПЕХ" : "ПРОВАЛ"));
-
-        String result2 = (String) testMethod(testClass, "multiplication", new Class[]{String.class, String.class}, new Object[]{"2", "1.1"});
-        System.out.println("Метод: multiplication - отправлено: 2 * 1.1, получено + " + result2 + " => " + ("2.2".equals(result2) ? "УСПЕХ" : "ПРОВАЛ"));
-
-        String result3 = (String) testMethod(testClass, "multiplication", new Class[]{String.class, String.class}, new Object[]{"2.2", "3"});
-        System.out.println("Метод: multiplication - отправлено: 2.2 * 3, получено + " + result3 + " => " + ("6.6".equals(result3) ? "УСПЕХ" : "ПРОВАЛ"));
-
-        String result4 = (String) testMethod(testClass, "multiplication", new Class[]{String.class, String.class}, new Object[]{"54.22", "18.02"});
-        System.out.println("Метод: multiplication - отправлено: 54.22 * 18.02, получено + " + result4 + " => " + ("977.04".equals(result4) ? "УСПЕХ" : "ПРОВАЛ"));
-    }
-
-    private void testSubtraction(Class testClass) {
-        System.out.println("--- " + testClass.getSimpleName() + " ---");
-
-        String result1 = (String) testMethod(testClass, "subtraction", new Class[]{String.class, String.class}, new Object[]{"5", "3"});
-        System.out.println("Метод: subtraction - отправлено: 5 - 3, получено: " + result1 + " => " + ("2".equals(result1) ? "УСПЕХ" : "ПРОВАЛ"));
-
-        String result2 = (String) testMethod(testClass, "subtraction", new Class[]{String.class, String.class}, new Object[]{"2", "1.1"});
-        System.out.println("Метод: subtraction - отправлено: 2 - 1.1, получено + " + result2 + " => " + ("0.9".equals(result2) ? "УСПЕХ" : "ПРОВАЛ"));
-
-        String result3 = (String) testMethod(testClass, "subtraction", new Class[]{String.class, String.class}, new Object[]{"2.2", "3"});
-        System.out.println("Метод: subtraction - отправлено: 2.2 - 3, получено + " + result3 + " => " + ("-0.8".equals(result3) ? "УСПЕХ" : "ПРОВАЛ"));
-
-        String result4 = (String) testMethod(testClass, "subtraction", new Class[]{String.class, String.class}, new Object[]{"54.22", "18.02"});
-        System.out.println("Метод: subtraction - отправлено: 54.22 - 18.02, получено + " + result4 + " => " + ("36.2".equals(result4) ? "УСПЕХ" : "ПРОВАЛ"));
+    private void testMathClasses(Class testClass) {
+        System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
+        for (TestParameter testParameter : list.stream().filter(item -> item.getClassName().equals(testClass.getSimpleName())).collect(Collectors.toList())) {
+            String result = (String) testMethod(testClass, testParameter.getMethodName(), testParameter.getMethodArgumentArray(), testParameter.getMethodValueArray());
+            System.out.println("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: '" + result + "', ожидаем: '" + testParameter.getResult() + "' => " + (testParameter.getResult().equals(result) ? "УСПЕХ" : "ПРОВАЛ"));
+        }
     }
 
     private void testLineCheck(Class testClass) {
         Method[] methodArray = testClass.getDeclaredMethods();
+        Arrays.sort(methodArray, Comparator.comparing(Method::getName));
         if (methodArray.length > 0) {
-            System.out.println("--- Выбери метод ---");
+            System.out.println("--- Выбери метод ---------------------------------------------");
             for (int i = 0; i < methodArray.length; i++) {
                 System.out.println(i + " - " + methodArray[i].getName());
             }
             System.out.print("твой выбор: ");
             String menuItem = getMenuItem();
             int menuNumber = Integer.parseInt(menuItem);
-            testLineCheck(testClass, methodArray[menuNumber].getName());
+            System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
+            testLineClassesByBooleanResult(testClass, methodArray[menuNumber].getName());
         } else {
             System.out.println("В классе " + testClass.getSimpleName() + ", методы не обнаружены");
             startTest();
-        }
-    }
-
-    private void testLineCheck(Class testClass, String methodName) {
-        System.out.println("--- " + testClass.getSimpleName() + " ---");
-        switch (methodName) {
-            case "isMathSymbolsCorrect":
-                Boolean result1 = (Boolean) testMethod(testClass, "isMathSymbolsCorrect", new Object[]{"*1"});
-                System.out.println("Метод: isMathSymbolsCorrect - отправлено: *1, получено: " + result1 + " => " + (result1 != null && !result1 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result2 = (Boolean) testMethod(testClass, "isMathSymbolsCorrect", new Object[]{"1*"});
-                System.out.println("Метод: isMathSymbolsCorrect - отправлено: 1*, получено: " + result2 + " => " + (result2 != null && !result2 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result3 = (Boolean) testMethod(testClass, "isMathSymbolsCorrect", new Object[]{"/1"});
-                System.out.println("Метод: isMathSymbolsCorrect - отправлено: /1, получено: " + result3 + " => " + (result3 != null && !result3 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result4 = (Boolean) testMethod(testClass, "isMathSymbolsCorrect", new Object[]{"1/"});
-                System.out.println("Метод: isMathSymbolsCorrect - отправлено: 1/, получено: " + result4 + " => " + (result4 != null && !result4 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result5 = (Boolean) testMethod(testClass, "isMathSymbolsCorrect", new Object[]{"+1"});
-                System.out.println("Метод: isMathSymbolsCorrect - отправлено: +1, получено: " + result5 + " => " + (result5 != null && !result5 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result6 = (Boolean) testMethod(testClass, "isMathSymbolsCorrect", new Object[]{"1+"});
-                System.out.println("Метод: isMathSymbolsCorrect - отправлено: 1+, получено: " + result6 + " => " + (result6 != null && !result6 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result7 = (Boolean) testMethod(testClass, "isMathSymbolsCorrect", new Object[]{"-1"});
-                System.out.println("Метод: isMathSymbolsCorrect - отправлено: -1, получено: " + result7 + " => " + (result7 != null && result7 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result8 = (Boolean) testMethod(testClass, "isMathSymbolsCorrect", new Object[]{"1-"});
-                System.out.println("Метод: isMathSymbolsCorrect - отправлено: 1-, получено: " + result8 + " => " + (result8 != null && !result8 ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "isRoundBracketsPositionsCorrect":
-                Boolean result9 = (Boolean) testMethod(testClass, "isRoundBracketsPositionsCorrect", new Object[]{"1)2(3"});
-                System.out.println("Метод: isRoundBracketsPositionsCorrect - отправлено: 1)2(3, получено: " + result9 + " => " + (result9 != null && !result9 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result10 = (Boolean) testMethod(testClass, "isRoundBracketsPositionsCorrect", new Object[]{"1(2)3"});
-                System.out.println("Метод: isRoundBracketsPositionsCorrect - отправлено: 1(2)3, получено: " + result10 + " => " + (result10 != null && result10 ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "isRoundBracketsCountCorrect":
-                Boolean result11 = (Boolean) testMethod(testClass, "isRoundBracketsCountCorrect", new Object[]{"1(2)3)4"});
-                System.out.println("Метод: isRoundBracketsCountCorrect - отправлено: 1(2)3)4, получено: " + result11 + " => " + (result11 != null && !result11 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result12 = (Boolean) testMethod(testClass, "isRoundBracketsCountCorrect", new Object[]{"1(2(3)4)5"});
-                System.out.println("Метод: isRoundBracketsCountCorrect - отправлено: 1(2(3)4)5, получено: " + result12 + " => " + (result12 != null && result12 ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "isRoundBracketsCorrect":
-                Boolean result13 = (Boolean) testMethod(testClass, "isRoundBracketsCorrect", new Object[]{"1234"});
-                System.out.println("Метод: isRoundBracketsCorrect - отправлено: 1234, получено: " + result13 + " => " + (result13 != null && result13 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result14 = (Boolean) testMethod(testClass, "isRoundBracketsCorrect", new Object[]{"1(2(3)"});
-                System.out.println("Метод: isRoundBracketsCorrect - отправлено: 1(2(3), получено: " + result14 + " => " + (result14 != null && !result14 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result15 = (Boolean) testMethod(testClass, "isRoundBracketsCorrect", new Object[]{"1(2(3)4)5"});
-                System.out.println("Метод: isRoundBracketsCorrect - отправлено: 1(2(3)4)5, получено: " + result15 + " => " + (result15 != null && result15 ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "isLineCorrect":
-                Boolean result16 = (Boolean) testMethod(testClass, "isLineCorrect", new Object[]{"1234"});
-                System.out.println("Метод: isLineCorrect - отправлено: 1234, получено: " + result16 + " => " + (result16 != null && result16 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result17 = (Boolean) testMethod(testClass, "isLineCorrect", new Object[]{"1(2(3)"});
-                System.out.println("Метод: isLineCorrect - отправлено: 1(2(3), получено: " + result17 + " => " + (result17 != null && !result17 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result18 = (Boolean) testMethod(testClass, "isLineCorrect", new Object[]{"1(2(3)4)5"});
-                System.out.println("Метод: isLineCorrect - отправлено: 1(2(3)4)5, получено: " + result18 + " => " + (result18 != null && result18 ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            default:
-                System.out.println("Метод не обнаружен");
-        }
-    }
-
-    private void testLineOperation(Class testClass) {
-        Method[] methodArray = testClass.getDeclaredMethods();
-        if (methodArray.length > 0) {
-            System.out.println("--- Выбери метод ---");
-            for (int i = 0; i < methodArray.length; i++) {
-                System.out.println(i + " - " + methodArray[i].getName());
-            }
-            System.out.print("твой выбор: ");
-            String menuItem = getMenuItem();
-            int menuNumber = Integer.parseInt(menuItem);
-            testLineOperation(testClass, methodArray[menuNumber].getName());
-        } else {
-            System.out.println("В классе " + testClass.getSimpleName() + ", методы не обнаружены");
-            startTest();
-        }
-    }
-
-    private void testLineOperation(Class testClass, String methodName) {
-        System.out.println("--- " + testClass.getSimpleName() + " ---");
-        switch (methodName) {
-            case "collectLines":
-                String result1 = (String) testMethod(testClass, "collectLines", new Object[]{"1+2+4", "3", 1});
-                System.out.println("Метод: collectLines - отправлено: 1+2+4 и 3 и 1, получено: " + result1 + " => " + ("3+4".equals(result1) ? "УСПЕХ" : "ПРОВАЛ"));
-                String result2 = (String) testMethod(testClass, "collectLines", new Object[]{"1+(2+3)+4", "5", 2, 6});
-                System.out.println("Метод: collectLines - отправлено: 1+(2+3)+4 и 5 и 2 и 6, получено: " + result2 + " => " + ("1+5+4".equals(result2) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "subtraction":
-                String result3 = (String) testMethod(testClass, "subtraction", new Object[]{"1+2-3+4", 3});
-                System.out.println("Метод: subtraction - отправлено: 1+2-3+4 и 3, получено: " + result3 + " => " + ("-1".equals(result3) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "addition":
-                String result4 = (String) testMethod(testClass, "addition", new Object[]{"1-2+3-4", 3});
-                System.out.println("Метод: addition - отправлено: 1-2+3-4 и 3, получено: " + result4 + " => " + ("5".equals(result4) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "division":
-                String result5 = (String) testMethod(testClass, "division", new Object[]{"1-2/3-4", 3});
-                System.out.println("Метод: division - отправлено: 1-2/3-4 и 3, получено: " + result5 + " => " + ("-0.67".equals(result5) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "multiplication":
-                String result6 = (String) testMethod(testClass, "multiplication", new Object[]{"1-2*3-4", 3});
-                System.out.println("Метод: multiplication - отправлено: 1-2*3-4 и 3, получено: " + result6 + " => " + ("-6".equals(result6) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "getResultWithoutRoundBrackets":
-                String result7 = (String) testMethod(testClass, "getResultWithoutRoundBrackets", new Object[]{"1+4"});
-                System.out.println("Метод: getResultWithoutRoundBrackets - отправлено: 1+4, получено: " + result7 + " => " + ("5".equals(result7) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "getResultWithRoundBrackets":
-                String result8 = (String) testMethod(testClass, "getResultWithRoundBrackets", new Object[]{"1+(2+3)+4"});
-                System.out.println("Метод: getResultWithRoundBrackets - отправлено: 1+(2+3)+4, получено: " + result8 + " => " + ("10".equals(result8) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "getResult":
-                String result9 = (String) testMethod(testClass, "getResult", new Object[]{"1+1"});
-                System.out.println("Метод: getResult - отправлено: 1+1, получено: " + result9 + " => " + ("2".equals(result9) ? "УСПЕХ" : "ПРОВАЛ"));
-                String result10 = (String) testMethod(testClass, "getResult", new Object[]{"2+2*2"});
-                System.out.println("Метод: getResult - отправлено: 2+2*2, получено: " + result10 + " => " + ("6".equals(result10) ? "УСПЕХ" : "ПРОВАЛ"));
-                String result11 = (String) testMethod(testClass, "getResult", new Object[]{"(2+2)*2"});
-                System.out.println("Метод: getResult - отправлено: (2+2)*2, получено: " + result11 + " => " + ("8".equals(result11) ? "УСПЕХ" : "ПРОВАЛ"));
-                String result12 = (String) testMethod(testClass, "getResult", new Object[]{"-1-1"});
-                System.out.println("Метод: getResult - отправлено: -1-1, получено: " + result12 + " => " + ("-2".equals(result12) ? "УСПЕХ" : "ПРОВАЛ"));
-                String result13 = (String) testMethod(testClass, "getResult", new Object[]{"-1*2+3/4"});
-                System.out.println("Метод: getResult - отправлено: -1*2+3/4, получено: " + result13 + " => " + ("-1.25".equals(result13) ? "УСПЕХ" : "ПРОВАЛ"));
-                String result14 = (String) testMethod(testClass, "getResult", new Object[]{"-1*(2+3)/4"});
-                System.out.println("Метод: getResult - отправлено: -1*(2+3)/4, получено: " + result14 + " => " + ("-1.25".equals(result14) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "concatLines":
-                String result15 = (String) testMethod(testClass, "concatLines", new Object[]{"1", "2"});
-                System.out.println("Метод: concatLines - отправлено: 1, 2, получено: " + result15 + " => " + ("12".equals(result15) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "addMinusPrefix":
-                String result16 = (String) testMethod(testClass, "addMinusPrefix", new Object[]{"1"});
-                System.out.println("Метод: addMinusPrefix - отправлено: 1, получено: " + result16 + " => " + ("-1".equals(result16) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "removeLastSymbol":
-                String result17 = (String) testMethod(testClass, "removeLastSymbol", new Object[]{"1+2+34"});
-                System.out.println("Метод: removeLastSymbol - отправлено: 1+2+34, получено: " + result17 + " => " + ("1+2+3".equals(result17) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            default:
-                System.out.println("Метод не обнаружен");
         }
     }
 
     private void testLineParsing(Class testClass) {
         Method[] methodArray = testClass.getDeclaredMethods();
+        Arrays.sort(methodArray, Comparator.comparing(Method::getName));
         if (methodArray.length > 0) {
-            System.out.println("--- Выбери метод ---");
+            System.out.println("--- Выбери метод ---------------------------------------------");
             for (int i = 0; i < methodArray.length; i++) {
                 System.out.println(i + " - " + methodArray[i].getName());
             }
@@ -406,105 +208,176 @@ public class JCalcTest {
     }
 
     private void testLineParsing(Class testClass, String methodName) {
-        System.out.println("--- " + testClass.getSimpleName() + " ---");
+        System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
         switch (methodName) {
             case "getNumberFromRightPart":
-                String result1 = (String) testMethod(testClass, "getNumberFromRightPart", new Object[]{"1.2+3.4*5.6/7.8", 7});
-                System.out.println("Метод: getNumberFromRightPart - отправлено: 1.2+3.4*5.6/7.8 и 7, получено: " + result1 + " => " + ("5.6".equals(result1) ? "УСПЕХ" : "ПРОВАЛ"));
-                String result2 = (String) testMethod(testClass, "getNumberFromRightPart", new Object[]{"1.2+3.4*(-5.6)/7.8", 7});
-                System.out.println("Метод: getNumberFromRightPart - отправлено: 1.2+3.4*(-5.6)/7.8 и 7, получено: " + result2 + " => " + ("-5.6".equals(result2) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
             case "getNumberFromLeftPart":
-                String result3 = (String) testMethod(testClass, "getNumberFromLeftPart", new Object[]{"1.2+3.4*5.6/7.8", 7});
-                System.out.println("Метод: getNumberFromLeftPart - отправлено: 1.2+3.4*5.6/7.8 и 7, получено: " + result3 + " => " + ("3.4".equals(result3) ? "УСПЕХ" : "ПРОВАЛ"));
-                String result4 = (String) testMethod(testClass, "getNumberFromLeftPart", new Object[]{"1.2+(-3.4)*5.6/7.8", 10});
-                System.out.println("Метод: getNumberFromLeftPart - отправлено: 1.2+(-3.4)*5.6/7.8 и 10, получено: " + result4 + " => " + ("-3.4".equals(result4) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
             case "findFirstMathSymbol":
-                String result5 = (String) testMethod(testClass, "findFirstMathSymbol", new Object[]{"1.2+3.4*5.6/7.8", 1});
-                System.out.println("Метод: findFirstMathSymbol - отправлено: 1.2+3.4*5.6/7.8 и 1, получено: " + result5 + " => " + ("*".equals(result5) ? "УСПЕХ" : "ПРОВАЛ"));
-                String result6 = (String) testMethod(testClass, "findFirstMathSymbol", new Object[]{"1.2+3.4*5.6/7.8", 2});
-                System.out.println("Метод: findFirstMathSymbol - отправлено: 1.2+3.4*5.6/7.8 и 2, получено: " + result6 + " => " + ("+".equals(result6) ? "УСПЕХ" : "ПРОВАЛ"));
-                String result7 = (String) testMethod(testClass, "findFirstMathSymbol", new Object[]{"1.2+3.4*5.6/7.8"});
-                System.out.println("Метод: findFirstMathSymbol - отправлено: 1.2+3.4*5.6/7.8, получено: " + result7 + " => " + ("*".equals(result7) ? "УСПЕХ" : "ПРОВАЛ"));
-                String result8 = (String) testMethod(testClass, "findFirstMathSymbol", new Object[]{"1.2+3.4-5.6"});
-                System.out.println("Метод: findFirstMathSymbol - отправлено: 1.2+3.4-5.6, получено: " + result8 + " => " + ("+".equals(result8) ? "УСПЕХ" : "ПРОВАЛ"));
+                testLineClassesByStringResult(testClass, methodName);
                 break;
             case "isFinalNumber":
-                Boolean result9 = (Boolean) testMethod(testClass, "isFinalNumber", new Object[]{"0"});
-                System.out.println("Метод: isFinalNumber - отправлено: 0, получено: " + result9 + " => " + (result9 != null && result9 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result10 = (Boolean) testMethod(testClass, "isFinalNumber", new Object[]{"-1"});
-                System.out.println("Метод: isFinalNumber - отправлено: -1, получено: " + result10 + " => " + (result10 != null && result10 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result11 = (Boolean) testMethod(testClass, "isFinalNumber", new Object[]{"-1.2"});
-                System.out.println("Метод: isFinalNumber - отправлено: -1.2, получено: " + result11 + " => " + (result11 != null && result11 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result12 = (Boolean) testMethod(testClass, "isFinalNumber", new Object[]{"-1.2+3.4"});
-                System.out.println("Метод: isFinalNumber - отправлено: -1.2+3.4, получено: " + result12 + " => " + (result12 != null && !result12 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result13 = (Boolean) testMethod(testClass, "isFinalNumber", new Object[]{"-.1.2."});
-                System.out.println("Метод: isFinalNumber - отправлено: -.1.2., получено: " + result13 + " => " + (result13 != null && !result13 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result14 = (Boolean) testMethod(testClass, "isFinalNumber", new Object[]{"(1)"});
-                System.out.println("Метод: isFinalNumber - отправлено: (1), получено: " + result14 + " => " + (result14 != null && !result14 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result15 = (Boolean) testMethod(testClass, "isFinalNumber", new Object[]{"."});
-                System.out.println("Метод: isFinalNumber - отправлено: ., получено: " + result15 + " => " + (result15 != null && !result15 ? "УСПЕХ" : "ПРОВАЛ"));
-                Boolean result16 = (Boolean) testMethod(testClass, "isFinalNumber", new Object[]{"x"});
-                System.out.println("Метод: isFinalNumber - отправлено: x, получено: " + result16 + " => " + (result16 != null && !result16 ? "УСПЕХ" : "ПРОВАЛ"));
+                testLineClassesByBooleanResult(testClass, methodName);
+                break;
+            case "getDouble":
+            case "getInteger":
+                System.out.println("Не подлежит тестированию");
                 break;
             default:
                 System.out.println("Метод не обнаружен");
         }
     }
 
-    private void testLinePreparing(Class testClass) {
+    private void testStringUtilsClass(Class testClass) {
         Method[] methodArray = testClass.getDeclaredMethods();
+        Arrays.sort(methodArray, Comparator.comparing(Method::getName));
         if (methodArray.length > 0) {
-            System.out.println("--- Выбери метод ---");
+            System.out.println("--- Выбери метод ---------------------------------------------");
             for (int i = 0; i < methodArray.length; i++) {
                 System.out.println(i + " - " + methodArray[i].getName());
             }
             System.out.print("твой выбор: ");
             String menuItem = getMenuItem();
             int menuNumber = Integer.parseInt(menuItem);
-            testLinePreparing(testClass, methodArray[menuNumber].getName());
+            System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
+            testLineClassesByStringResult(testClass, methodArray[menuNumber].getName());
         } else {
             System.out.println("В классе " + testClass.getSimpleName() + ", методы не обнаружены");
             startTest();
         }
     }
 
-    private void testLinePreparing(Class testClass, String methodName) {
-        System.out.println("--- " + testClass.getSimpleName() + " ---");
-        switch (methodName) {
-            case "removeRoundBrackets":
-                String result1 = (String) testMethod(testClass, "removeRoundBrackets", new Object[]{"(1)+(-2)+(-3)+(4)"});
-                System.out.println("Метод: removeRoundBrackets - отправлено: (1)+(-2)+(-3)+(4), получено: " + result1 + " => " + ("1+(-2)+(-3)+4".equals(result1) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "removeDuplicates":
-                String result2 = (String) testMethod(testClass, "removeDuplicates", new Object[]{"++++--+--///*//***()-)(++**"});
-                System.out.println("Метод: removeDuplicates - отправлено: ++++--+--///*//***()-)(++**, получено: " + result2 + " => " + ("+/*/*-)*(+*".equals(result2) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "trimTails":
-                String result3 = (String) testMethod(testClass, "trimTails", new Object[]{"++++--+--1--1++//**"});
-                System.out.println("Метод: trimTails - отправлено: ++++--+--1--1++//**, получено: " + result3 + " => " + ("-1+1".equals(result3) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "leaveMathSymbol":
-                String result4 = (String) testMethod(testClass, "leaveMathSymbol", new Object[]{"+aaaa-1b+b1+cccc"});
-                System.out.println("Метод: leaveMathSymbol - отправлено: +aaaa-1b--b1+cccc, получено: " + result4 + " => " + ("-1+1".equals(result4) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "replaceCommas":
-                String result5 = (String) testMethod(testClass, "replaceCommas", new Object[]{"1,2+3,4"});
-                System.out.println("Метод: replaceCommas - отправлено: 1,2+3,4, получено: " + result5 + " => " + ("1.2+3.4".equals(result5) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "removeSpaces":
-                String result6 = (String) testMethod(testClass, "removeSpaces", new Object[]{"1 + 2 - 4"});
-                System.out.println("Метод: removeSpaces - отправлено: 1 + 2 - 4, получено: " + result6 + " => " + ("1+2-4".equals(result6) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            case "linePreparing":
-                String result7 = (String) testMethod(testClass, "linePreparing", new Object[]{"-- // ++ -- 1 ++ ( ) ++ ( 2 - 4 ) ( 4 ** 5 ) ++"});
-                System.out.println("Метод: linePreparing - отправлено: -- // ++ -- 1 ++ ( ) ++ ( 2 - 4 ) ( 4 ** 5 ) ++, получено: " + result7 + " => " + ("-1+(2-4)*(4*5)".equals(result7) ? "УСПЕХ" : "ПРОВАЛ"));
-                break;
-            default:
-                System.out.println("Метод не обнаружен");
+    private void testLineClassesByBooleanResult(Class testClass, String methodName) {
+        for (TestParameter testParameter : list.stream().filter(item -> item.getClassName().equals(testClass.getSimpleName())).filter(item -> item.getMethodName().equals(methodName)).collect(Collectors.toList())) {
+            Boolean result = (Boolean) testMethod(testClass, testParameter.getMethodName(), testParameter.getMethodValueArray());
+            System.out.println(
+                    result == null ?
+                            ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: 'null' => ПРОВАЛ" ) :
+                            ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: '" + result + "', ожидаем: '" + testParameter.getResult() + "' => " + (testParameter.getResult().equals(result) ? "УСПЕХ" : "ПРОВАЛ"))
+            );
         }
     }
+
+    private void testLineClassesByStringResult(Class testClass, String methodName) {
+        for (TestParameter testParameter : list.stream().filter(item -> item.getClassName().equals(testClass.getSimpleName())).filter(item -> item.getMethodName().equals(methodName)).collect(Collectors.toList())) {
+            String result = (String) testMethod(testClass, testParameter.getMethodName(), testParameter.getMethodValueArray());
+            System.out.println(
+                    result == null ?
+                            ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: 'null' => ПРОВАЛ" ) :
+                            ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: '" + result + "', ожидаем: '" + testParameter.getResult() + "' => " + (testParameter.getResult().equals(result) ? "УСПЕХ" : "ПРОВАЛ"))
+            );
+        }
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    public static final List<TestParameter> list = Collections.unmodifiableList(
+            new ArrayList<TestParameter>() {{
+                add(new TestParameter<>("Addition", "addition", new Class[]{String.class, String.class}, new Object[]{"3", "2"}, "3+2", "5"));
+                add(new TestParameter<>("Addition", "addition", new Class[]{String.class, String.class}, new Object[]{"3", "2.34"}, "3+2.34", "5.34"));
+                add(new TestParameter<>("Addition", "addition", new Class[]{String.class, String.class}, new Object[]{"3.34", "2"}, "3.34+2", "5.34"));
+                add(new TestParameter<>("Addition", "addition", new Class[]{String.class, String.class}, new Object[]{"3.34", "2.11"}, "3.34+2.11", "5.45"));
+
+                add(new TestParameter<>("Division", "division", new Class[]{String.class, String.class}, new Object[]{"5", "3"}, "5/3", "1.67"));
+                add(new TestParameter<>("Division", "division", new Class[]{String.class, String.class}, new Object[]{"2", "1.1"}, "2/1.1", "1.82"));
+                add(new TestParameter<>("Division", "division", new Class[]{String.class, String.class}, new Object[]{"2.2", "3"}, "2.2/3", "0.73"));
+                add(new TestParameter<>("Division", "division", new Class[]{String.class, String.class}, new Object[]{"54.22", "18.02"}, "54.22/18.02", "3.01"));
+
+                add(new TestParameter<>("Multiplication", "multiplication", new Class[]{String.class, String.class}, new Object[]{"5", "3"}, "5*3", "15"));
+                add(new TestParameter<>("Multiplication", "multiplication", new Class[]{String.class, String.class}, new Object[]{"2", "1.1"}, "2*1.1", "2.2"));
+                add(new TestParameter<>("Multiplication", "multiplication", new Class[]{String.class, String.class}, new Object[]{"2.2", "3"}, "2.2*3", "6.6"));
+                add(new TestParameter<>("Multiplication", "multiplication", new Class[]{String.class, String.class}, new Object[]{"54.22", "18.02"}, "54.22*18.02", "977.04"));
+
+                add(new TestParameter<>("Subtraction", "subtraction", new Class[]{String.class, String.class}, new Object[]{"5", "3"}, "5-3", "2"));
+                add(new TestParameter<>("Subtraction", "subtraction", new Class[]{String.class, String.class}, new Object[]{"2", "1.1"}, "2-1.1", "0.9"));
+                add(new TestParameter<>("Subtraction", "subtraction", new Class[]{String.class, String.class}, new Object[]{"2.2", "3"}, "2.2-3", "-0.8"));
+                add(new TestParameter<>("Subtraction", "subtraction", new Class[]{String.class, String.class}, new Object[]{"54.22", "18.02"}, "54.22-18.02", "36.2"));
+
+                add(new TestParameter<>("LineCheck", "isFirstMathSymbol", null, new Object[]{"+1", "+"}, "+1 и +", false));
+                add(new TestParameter<>("LineCheck", "isFirstMathSymbol", null, new Object[]{"-1", "+"}, "-1 и +", true));
+                add(new TestParameter<>("LineCheck", "isLastMathSymbol", null, new Object[]{"1+", "+"}, "1+ и +", false));
+                add(new TestParameter<>("LineCheck", "isLastMathSymbol", null, new Object[]{"1-", "+"}, "1- и +", true));
+
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"*1"}, "*1", false));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"1*"}, "1*", false));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"/1"}, "/1", false));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"1/"}, "1/", false));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"+1"}, "+1", false));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"1+"}, "1+", false));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"-1"}, "-1", true));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"1-"}, "1-", false));
+
+                add(new TestParameter<>("LineCheck", "isRoundBracketsPositionsCorrect", null, new Object[]{"1)2(3"}, "1)2(3", false));
+                add(new TestParameter<>("LineCheck", "isRoundBracketsPositionsCorrect", null, new Object[]{"1(2)3"}, "1(2)3", true));
+
+                add(new TestParameter<>("LineCheck", "isRoundBracketsCountCorrect", null, new Object[]{"1(2)3)4"}, "1(2)3)4", false));
+                add(new TestParameter<>("LineCheck", "isRoundBracketsCountCorrect", null, new Object[]{"1(2(3)4)5"}, "1(2(3)4)5", true));
+
+                add(new TestParameter<>("LineCheck", "isRoundBracketsCorrect", null, new Object[]{"1234"}, "1234", true));
+                add(new TestParameter<>("LineCheck", "isRoundBracketsCorrect", null, new Object[]{"1(2(3)"}, "1(2(3)", false));
+                add(new TestParameter<>("LineCheck", "isRoundBracketsCorrect", null, new Object[]{"1(2(3)4)5"}, "1(2(3)4)5", true));
+
+                add(new TestParameter<>("LineCheck", "isLineCorrect", null, new Object[]{"-1"}, "-1", true));
+                add(new TestParameter<>("LineCheck", "isLineCorrect", null, new Object[]{"1234"}, "1234", true));
+                add(new TestParameter<>("LineCheck", "isLineCorrect", null, new Object[]{"1(2(3)"}, "1(2(3)", false));
+                add(new TestParameter<>("LineCheck", "isLineCorrect", null, new Object[]{"1(2(3)4)5"}, "1(2(3)4)5", true));
+
+                add(new TestParameter<>("LineOperation", "collectLines", null, new Object[]{"1+2+4", "3", 1}, "1+2+4 и 3 и 1", "3+4"));
+                add(new TestParameter<>("LineOperation", "collectLines", null, new Object[]{"1+(2+3)+4", "5", 2, 6}, "1+(2+3)+4 и 5 и 2 и 6", "1+5+4"));
+
+                add(new TestParameter<>("LineOperation", "subtraction", null, new Object[]{"1+2-3+4", 3}, "1+2-3+4 и 3", "-1"));
+
+                add(new TestParameter<>("LineOperation", "addition", null, new Object[]{"1-2+3-4", 3}, "1-2+3-4 и 3", "5"));
+
+                add(new TestParameter<>("LineOperation", "division", null, new Object[]{"1-2/3-4", 3}, "1-2/3-4 и 3", "0.67"));
+
+                add(new TestParameter<>("LineOperation", "multiplication", null, new Object[]{"1-2*3-4", 3}, "1-2*3-4 и 3", "6"));
+
+                add(new TestParameter<>("LineOperation", "getResultWithoutRoundBrackets", null, new Object[]{"1+4"}, "1+4", "5"));
+
+                add(new TestParameter<>("LineOperation", "getResultWithRoundBrackets", null, new Object[]{"1+(2+3)+4"}, "1+(2+3)+4", "10"));
+
+                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"1+1"}, "1+1", "2"));
+                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"2+2*2"}, "2+2*2", "6"));
+                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"(2+2)*2"}, "(2+2)*2", "8"));
+                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"-1-1"}, "-1-1", "-2"));
+                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"-1*2+3/4"}, "-1*2+3/4", "-1.25"));
+                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"-1*(2+3)/4"}, "-1*(2+3)/4", "-1.25"));
+
+                add(new TestParameter<>("LineOperation", "concatLines", null, new Object[]{"1", "2"}, "1 и 2", "12"));
+
+                add(new TestParameter<>("LineOperation", "addMinusPrefix", null, new Object[]{"1"}, "1", "-1"));
+
+                add(new TestParameter<>("LineOperation", "removeLastSymbol", null, new Object[]{"1+2+34"}, "1+2+34", "1+2+3"));
+
+                add(new TestParameter<>("LineParsing", "getNumberFromRightPart", null, new Object[]{"1.2+3.4*5.6/7.8", 7}, "1.2+3.4*5.6/7.8 и 7", "5.6"));
+                add(new TestParameter<>("LineParsing", "getNumberFromRightPart", null, new Object[]{"1.2+3.4*(-5.6)/7.8", 7}, "1.2+3.4*(-5.6)/7.8 и 7", "-5.6"));
+
+                add(new TestParameter<>("LineParsing", "getNumberFromLeftPart", null, new Object[]{"1.2+3.4*5.6/7.8", 7}, "1.2+3.4*5.6/7.8 и 7", "3.4"));
+                add(new TestParameter<>("LineParsing", "getNumberFromLeftPart", null, new Object[]{"1.2+(-3.4)*5.6/7.8", 10}, "1.2+(-3.4)*5.6/7.8 и 10", "-3.4"));
+
+                add(new TestParameter<>("LineParsing", "findFirstMathSymbol", null, new Object[]{"1.2+3.4*5.6/7.8", 1}, "1.2+3.4*5.6/7.8 и 1", "*"));
+                add(new TestParameter<>("LineParsing", "findFirstMathSymbol", null, new Object[]{"1.2+3.4*5.6/7.8", 2}, "1.2+3.4*5.6/7.8 и 2", "+"));
+                add(new TestParameter<>("LineParsing", "findFirstMathSymbol", null, new Object[]{"1.2+3.4*5.6/7.8"}, "1.2+3.4*5.6/7.8", "*"));
+                add(new TestParameter<>("LineParsing", "findFirstMathSymbol", null, new Object[]{"1.2+3.4-5.6"}, "1.2+3.4-5.6", "+"));
+
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"0"}, "0", true));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"-1"}, "-1", true));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"-1.2"}, "-1.2", true));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"-.1.2."}, "-.1.2.", false));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"-1.2+3.4"}, "-1.2+3.4", false));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"(1)"}, "(1)", false));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"."}, ".", false));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"x"}, "x", false));
+
+                add(new TestParameter<>("LinePreparing", "removeRoundBrackets", null, new Object[]{"(1)+(-2)+(-3)+(4)"}, "(1)+(-2)+(-3)+(4)", "1+(-2)+(-3)+4"));
+                add(new TestParameter<>("LinePreparing", "removeDuplicates", null, new Object[]{"++++--+--///*//***()-)(++**"}, "++++--+--///*//***()-)(++**", "+/*/*-)*(+*"));
+                add(new TestParameter<>("LinePreparing", "trimTails", null, new Object[]{"++++--+--1--1++//**"}, "++++--+--1--1++//**", "-1+1"));
+                add(new TestParameter<>("LinePreparing", "leaveMathSymbol", null, new Object[]{"+aaaa-1b+b1+cccc"}, "+aaaa-1b--b1+cccc", "-1+1"));
+                add(new TestParameter<>("LinePreparing", "replaceCommas", null, new Object[]{"1,2+3,4"}, "1,2+3,4", "1.2+3.4"));
+                add(new TestParameter<>("LinePreparing", "removeSpaces", null, new Object[]{"1 + 2 - 4"}, "1 + 2 - 4", "1+2-4"));
+                add(new TestParameter<>("LinePreparing", "linePreparing", null, new Object[]{"-- // ++ -- 1 ++ ( ) ++ ( 2 - 4 ) ( 4 ** 5 ) ++"}, "-- // ++ -- 1 ++ ( ) ++ ( 2 - 4 ) ( 4 ** 5 ) ++", "-1+(2-4)*(4*5)"));
+            }}
+    );
 
     //------------------------------------------------------------------------------------------------------------------
 
@@ -539,5 +412,77 @@ public class JCalcTest {
             exception.printStackTrace();
         }
         return null;
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    private static class TestParameter<R> {
+
+        private String className;
+        private String methodName;
+        private Class[] methodArgumentArray;
+        private Object[] methodValueArray;
+        private String value;
+        private R result;
+
+        public TestParameter() {
+        }
+
+        public TestParameter(String className, String methodName, Class[] methodArgumentArray, Object[] methodValueArray, String value, R result) {
+            this.className = className;
+            this.methodName = methodName;
+            this.methodArgumentArray = methodArgumentArray;
+            this.methodValueArray = methodValueArray;
+            this.value = value;
+            this.result = result;
+        }
+
+        public String getClassName() {
+            return className;
+        }
+
+        public void setClassName(String className) {
+            this.className = className;
+        }
+
+        public String getMethodName() {
+            return methodName;
+        }
+
+        public void setMethodName(String methodName) {
+            this.methodName = methodName;
+        }
+
+        public Class[] getMethodArgumentArray() {
+            return methodArgumentArray;
+        }
+
+        public void setMethodArgumentArray(Class[] methodArgumentArray) {
+            this.methodArgumentArray = methodArgumentArray;
+        }
+
+        public Object[] getMethodValueArray() {
+            return methodValueArray;
+        }
+
+        public void setMethodValueArray(Object[] methodValueArray) {
+            this.methodValueArray = methodValueArray;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public R getResult() {
+            return result;
+        }
+
+        public void setResult(R result) {
+            this.result = result;
+        }
     }
 }
