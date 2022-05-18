@@ -3,6 +3,7 @@ package edu.javagroup.jcalc.lines;
 public class LinePreparing {
 
     public static String linePreparing (String str){
+
         return "";
     }
 
