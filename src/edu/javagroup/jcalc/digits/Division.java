@@ -1,11 +1,13 @@
 package edu.javagroup.jcalc.digits;
 
 import edu.javagroup.jcalc.lines.LineParsing;
+
 /**
  * Используется для вычисления результата деления двух чисел
  *
  * @author SadovNick
  */
+
 public class Division {
 
     public static String division(String firstsStr, String secondStr) {

@@ -2,6 +2,7 @@ package edu.javagroup.jcalc.digits;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
 /**
  * Используется для округления числа
  *
