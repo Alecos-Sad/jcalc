@@ -102,41 +102,33 @@ public class LineOperation {
 
     //work
     private static String multiplication(String source, int symbolIndex) {
-        String string1 = LineParsing.getNumberFromLeftPart(source, symbolIndex);
-        String string2 = LineParsing.getNumberFromRightPart(source, symbolIndex);
-        return Multiplication.multiplication(string1, string2);
+        return Multiplication.multiplication(LineParsing.getNumberFromLeftPart(source, symbolIndex),
+                LineParsing.getNumberFromRightPart(source, symbolIndex));
     }
 
     //work
     private static String division(String source, int symbolIndex) {
-        String string1 = LineParsing.getNumberFromLeftPart(source, symbolIndex);
-        String string2 = LineParsing.getNumberFromRightPart(source, symbolIndex);
-        return Division.division(string1, string2);
+        return Division.division(LineParsing.getNumberFromLeftPart(source, symbolIndex),
+                LineParsing.getNumberFromRightPart(source, symbolIndex));
     }
+
 
     //work
     private static String addition(String source, int symbolIndex) {
-        String string1 = LineParsing.getNumberFromLeftPart(source, symbolIndex);
-        String string2 = LineParsing.getNumberFromRightPart(source, symbolIndex);
-        return Addition.addition(string1, string2);
+        return Addition.addition(LineParsing.getNumberFromLeftPart(source, symbolIndex),
+                LineParsing.getNumberFromRightPart(source, symbolIndex));
     }
 
     //work
     private static String subtraction(String source, int symbolIndex) {
-        String string1 = LineParsing.getNumberFromLeftPart(source, symbolIndex);
-        String string2 = LineParsing.getNumberFromRightPart(source, symbolIndex);
-        return Subtraction.subtraction(string1, string2);
+        return Subtraction.subtraction(LineParsing.getNumberFromLeftPart(source, symbolIndex),
+                LineParsing.getNumberFromRightPart(source, symbolIndex));
     }
 
     //work
-    private static String collectLines(String str, String result, int symbolIndex) {
-        StringBuilder stringBuilder = new StringBuilder();
-        String digit1 = LineParsing.getNumberFromLeftPart(str, symbolIndex);
-        String digit2 = LineParsing.getNumberFromRightPart(str, symbolIndex);
-        return stringBuilder
-                .append(str, 0, str.indexOf(digit1))
-                .append(result)
-                .append(str.substring(str.indexOf(digit2) + 1)).toString();
+    private static String collectLines(String source, String result, int symbolIndex) {
+        return source.substring(0, source.indexOf(LineParsing.getNumberFromLeftPart(source, symbolIndex))) + result +
+                source.substring(source.indexOf(LineParsing.getNumberFromRightPart(source, symbolIndex)) + 1);
     }
 
     //work

@@ -7,13 +7,11 @@ public class LineParsing {
         if (str.startsWith("-")) {
             str = str.substring(1);
         }
-
         if ((str.contains("*")) || (str.contains("/"))) {
             return findFirstMathSymbol(str, 1);
         }
         if ((str.contains("+")) || (str.contains("-"))) {
             return findFirstMathSymbol(str, 2);
-
         }
         return "";
     }
@@ -36,13 +34,11 @@ public class LineParsing {
         return "";
     }
 
-
     public static String getNumberFromLeftPart(String string, int position) {
 
         string = string.substring(0, position);
 
         if (string.contains(")")) {
-
             for (int i = string.length() - 1; i >= 0; i--) {
                 if (string.charAt(i) == ')') {
                     string = string.substring(0, i + 1);
@@ -50,7 +46,6 @@ public class LineParsing {
                 }
             }
         }
-
         if (string.contains("("))
             for (int j = 0; j < string.length(); j++) {
                 if (string.charAt(j) == '(') {
@@ -75,7 +70,6 @@ public class LineParsing {
         string = string.substring(position + 1);
 
         if (string.contains("(")) {
-
             for (int i = 0; i < string.length(); i++) {
                 if (string.charAt(i) == '(') {
                     string = string.substring(i + 1);
@@ -83,13 +77,10 @@ public class LineParsing {
                 }
             }
         }
-
         if (string.contains(")"))
             for (int j = 0; j < string.length(); j++) {
                 if (string.charAt(j) == ')') {
-
                     string = string.substring(0, j);
-
                     return string;
                 }
             }
@@ -124,7 +115,7 @@ public class LineParsing {
 
             }
             if ((string.startsWith(".")) || string.endsWith(".")) {
-               return false;
+                return false;
             }
             int count = 0;
             for (i = 0; i < string.length(); i++) {
