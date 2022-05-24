@@ -88,6 +88,7 @@ public class LinePreparing {
         } else if ((str.charAt(countFinish + 1) == ')')) {
             ++countFinish;
         }
+
         return removeDuplicates(str.substring(countStart, countFinish));
     }
 
