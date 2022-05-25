@@ -55,49 +55,29 @@ public class LineOperation {
             }
             source = collectLines(source, result, openBracketIndex, closeBracketIndex);
         }
-        return getResultWithoutRoundBrackets(source);
+        return source;
     }
 
     //false
-    private static String getResultWithoutRoundBrackets(String source) {
-        String whileContains = "/*+-";
-        for (int i = 0; i < source.length(); i++) {
-            String symbol = Character.toString(source.charAt(i));
-            if (whileContains.contains(symbol)) {
-                if (LineParsing.isFinalNumber(source)) {
-                    return source;
-                }
-                source = LineParsing.findFirstMathSymbol(source);
-                if (source.isEmpty()) {
-                    return "";
-                }
-                int symbolIndex = source.indexOf(symbol, i);
-                String result = "";
-                switch (symbol) {
-                    case "*":
-                        result = multiplication(source, symbolIndex);
-                        break;
-                    case "/":
-                        result = division(source, symbolIndex);
-                        break;
-                    case "+":
-                        result = addition(source, symbolIndex);
-                        break;
-                    case "-":
-                        result = subtraction(source, symbolIndex);
-                }
-                source = collectLines(source, result, symbolIndex);
-                source = source.replace("--", "+");
-                if (source.contains(".")) {
-                    int pointIndex = source.indexOf(".");
-                    String s = source.substring(pointIndex + 1);
-                    int zero = Integer.parseInt(s);
-                    source = zero == 0 ? source.substring(0, pointIndex) : source;
-                }
+    private static String getResultWithoutRoundBrackets(String str) {
+
+        String symbol = LineParsing.findFirstMathSymbol(str);
+        int pos = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.contains("(")) {
+                pos = i;
+                break;
             }
-            return source;
+            switch (String.valueOf(pos + 1)) {
+                case "+":
+                    return addition(str, pos);
+                case "-":
+                    return subtraction(str, pos);
+            }
         }
-        return source;
+
+
+        return str;
     }
 
     //work

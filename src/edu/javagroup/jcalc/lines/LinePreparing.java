@@ -3,7 +3,7 @@ package edu.javagroup.jcalc.lines;
 public class LinePreparing {
 
     public static String linePreparing(String str) {
-//        Subtask #2 (?)
+//        Subtask #2
 //        создать метод linePreparing
 //        входные параметры: String
 //        возвращает: String
@@ -14,22 +14,24 @@ public class LinePreparing {
 //        3. записать в вашу строку результат работы метода leaveMathSymbols
 //        4. если строка начинается на символ +, убрать этот символ за ненадобностью
 //        5. вернуть строку
-        String strFin = "";
+
         if (str.contains(" ")) {
-            strFin = removeSpaces(str);
+            str = removeSpaces(str);
         }
         if (str.contains(",")) {
-            strFin = replaceCommas(str);
+            str = replaceCommas(str);
         }
-        strFin = leaveMathSymbol(strFin);
-        if (strFin.startsWith("+")) {
-            strFin.substring(1);
+        if (str.startsWith("+")) {
+            str.replace("+", "");
         }
+        str = leaveMathSymbol(str);
         return str;
     }
 
+
     //work
     public static String removeSpaces(String source) {
+        //вернуть пришедшую строку без пробелов
         if (source.contains(" ")) {
             source = source.replace(" ", "");
         }
@@ -49,7 +51,8 @@ public class LinePreparing {
         }
         return source;
     }
-//work
+
+    //work
     public static String leaveMathSymbol(String str) {
         //обработать пришедшую строку, так, чтобы она содержала, только допустимые символы: 0123456789.()*/+-
         //обработать полученную строку в методе trimTails
@@ -61,12 +64,15 @@ public class LinePreparing {
                 result.append(str.charAt(i));
             }
         }
-        return trimTails(removeDuplicates(result.toString()));
+        return removeDuplicates(trimTails(result.toString()));
     }
 
     //work
     public static String trimTails(String str) {
-
+        //удалить из строки лишние символы в начале и в конце строки
+        //1. учесть минус перед самой первой цифрой
+        //2. учесть наличие скобок
+        //пример: /*+-+/*(1+1)-1--1+(1+1)/*+-/ результат: (1+1)-1--1+(1+1)
         int countStart = 0;
         int countFinish = 0;
         for (int i = 0; i < str.length(); i++) {
@@ -77,17 +83,18 @@ public class LinePreparing {
         }
         for (int j = str.length() - 1; j >= 0; j--) {
             if (Character.isDigit(str.charAt(j))) {
-                countFinish = j + 1;
+                countFinish = j + 2;
                 break;
             }
         }
         if ((str.charAt(countStart - 1) == '-') || (str.charAt(countStart - 1) == '(')) {
             --countStart;
         } else if ((str.charAt(countStart - 1) == '-') & (str.charAt(countStart - 2) == '(')) {
-            countStart -= 2;
+            countStart += 2;
         } else if ((str.charAt(countFinish + 1) == ')')) {
             ++countFinish;
         }
+
         return removeDuplicates(str.substring(countStart, countFinish));
     }
 
@@ -98,20 +105,31 @@ public class LinePreparing {
 //                возвращает: String
 //                реализация:
 //                получить строку, в которой все дубликаты символов * / + - заменены на единичные
-        if (str.contains("--")) {
-            return str.replace("--", "+");
-        }
-        if (str.contains("+-")) {
-            return str.replace("+-", "-");
-        }
-        if (str.contains("-+")) {
-            return str.replace("-+", "-");
-        }
-        if (str.contains(")(")) {
-            return str.replace(")(", ")*(");
-        }
-        if (str.contains("()")) {
-            return str.replace("()", "");
+        for (int i = 1; i < str.length(); i++) {
+            if (str.contains("++")) {
+                str = str.replace("++", "+");
+            }
+            if (str.contains("--")) {
+                str = str.replace("--", "+");
+            }
+            if (str.contains("+-")) {
+                str = str.replace("+-", "-");
+            }
+            if (str.contains("-+")) {
+                str = str.replace("-+", "-");
+            }
+            if (str.contains("**")) {
+                str = str.replace("**", "*");
+            }
+            if (str.contains(")(")) {
+                str = str.replace(")(", ")*(");
+            }
+            if (str.contains("()")) {
+                str = str.replace("()", "");
+            }
+            if (str.contains("//")) {
+                str = str.replace("//", "/");
+            }
         }
         return str;
     }

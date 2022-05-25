@@ -49,9 +49,7 @@ public class LineParsing {
         if (string.contains("("))
             for (int j = 0; j < string.length(); j++) {
                 if (string.charAt(j) == '(') {
-
                     string = string.substring(j + 1, string.length() - 1);
-
                     return string;
                 }
             }
@@ -62,14 +60,14 @@ public class LineParsing {
                 return string;
             }
         }
-        return "";
+        return string;
     }
 
     public static String getNumberFromRightPart(String string, int position) {
 
         string = string.substring(position + 1);
 
-        if (string.contains("(")) {
+        while (string.contains("(")) {
             for (int i = 0; i < string.length(); i++) {
                 if (string.charAt(i) == '(') {
                     string = string.substring(i + 1);
@@ -93,7 +91,7 @@ public class LineParsing {
                 return string;
             }
         }
-        return "";
+        return string;
     }
 
     public static int getInteger(String str) {
@@ -101,7 +99,7 @@ public class LineParsing {
     }
 
     public static double getDouble(String str) {
-        return Double.parseDouble(str);
+        return Double.parseDouble(str.trim());
     }
 
     public static boolean isFinalNumber(String string) {
