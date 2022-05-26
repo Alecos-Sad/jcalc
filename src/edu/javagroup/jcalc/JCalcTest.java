@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author kaa
- * @version 3.0
+ * @version 3.1
  */
 public class JCalcTest {
 
@@ -95,8 +95,123 @@ public class JCalcTest {
         } catch (ClassNotFoundException exception) {
             //exception.printStackTrace();
         }
+        map.put("9", All.class);
         CLASS_MAP = Collections.unmodifiableMap(map);
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    public static final List<TestParameter> TEST_PARAMETER_LIST = Collections.unmodifiableList(
+            new ArrayList<TestParameter>() {{
+                add(new TestParameter<>("Addition", "addition", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"3", "2"}, "3+2", "5"));
+                add(new TestParameter<>("Addition", "addition", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"3", "2.34"}, "3+2.34", "5.34"));
+                add(new TestParameter<>("Addition", "addition", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"3.34", "2"}, "3.34+2", "5.34"));
+                add(new TestParameter<>("Addition", "addition", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"3.34", "2.11"}, "3.34+2.11", "5.45"));
+
+                add(new TestParameter<>("Division", "division", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"5", "3"}, "5/3", "1.67"));
+                add(new TestParameter<>("Division", "division", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"2", "1.1"}, "2/1.1", "1.82"));
+                add(new TestParameter<>("Division", "division", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"2.2", "3"}, "2.2/3", "0.73"));
+                add(new TestParameter<>("Division", "division", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"54.22", "18.02"}, "54.22/18.02", "3.01"));
+
+                add(new TestParameter<>("Multiplication", "multiplication", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"5", "3"}, "5*3", "15"));
+                add(new TestParameter<>("Multiplication", "multiplication", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"2", "1.1"}, "2*1.1", "2.2"));
+                add(new TestParameter<>("Multiplication", "multiplication", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"2.2", "3"}, "2.2*3", "6.6"));
+                add(new TestParameter<>("Multiplication", "multiplication", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"54.22", "18.02"}, "54.22*18.02", "977.04"));
+
+                add(new TestParameter<>("Subtraction", "subtraction", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"5", "3"}, "5-3", "2"));
+                add(new TestParameter<>("Subtraction", "subtraction", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"2", "1.1"}, "2-1.1", "0.9"));
+                add(new TestParameter<>("Subtraction", "subtraction", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"2.2", "3"}, "2.2-3", "-0.8"));
+                add(new TestParameter<>("Subtraction", "subtraction", new Class[]{java.lang.String.class, java.lang.String.class}, new Object[]{"54.22", "18.02"}, "54.22-18.02", "36.2"));
+
+                add(new TestParameter<>("LineCheck", "isFirstMathSymbol", null, new Object[]{"+1", "+"}, "+1 и +", false));
+                add(new TestParameter<>("LineCheck", "isFirstMathSymbol", null, new Object[]{"-1", "+"}, "-1 и +", true));
+                add(new TestParameter<>("LineCheck", "isLastMathSymbol", null, new Object[]{"1+", "+"}, "1+ и +", false));
+                add(new TestParameter<>("LineCheck", "isLastMathSymbol", null, new Object[]{"1-", "+"}, "1- и +", true));
+
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"*1"}, "*1", false));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"1*"}, "1*", false));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"/1"}, "/1", false));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"1/"}, "1/", false));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"+1"}, "+1", false));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"1+"}, "1+", false));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"-1"}, "-1", true));
+                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"1-"}, "1-", false));
+
+                add(new TestParameter<>("LineCheck", "isRoundBracketsPositionsCorrect", null, new Object[]{"1)2(3"}, "1)2(3", false));
+                add(new TestParameter<>("LineCheck", "isRoundBracketsPositionsCorrect", null, new Object[]{"1(2)3"}, "1(2)3", true));
+
+                add(new TestParameter<>("LineCheck", "isRoundBracketsCountCorrect", null, new Object[]{"1(2)3)4"}, "1(2)3)4", false));
+                add(new TestParameter<>("LineCheck", "isRoundBracketsCountCorrect", null, new Object[]{"1(2(3)4)5"}, "1(2(3)4)5", true));
+
+                add(new TestParameter<>("LineCheck", "isRoundBracketsCorrect", null, new Object[]{"1234"}, "1234", true));
+                add(new TestParameter<>("LineCheck", "isRoundBracketsCorrect", null, new Object[]{"1(2(3)"}, "1(2(3)", false));
+                add(new TestParameter<>("LineCheck", "isRoundBracketsCorrect", null, new Object[]{"1(2(3)4)5"}, "1(2(3)4)5", true));
+
+                add(new TestParameter<>("LineCheck", "isLineCorrect", null, new Object[]{"-1"}, "-1", true));
+                add(new TestParameter<>("LineCheck", "isLineCorrect", null, new Object[]{"1234"}, "1234", true));
+                add(new TestParameter<>("LineCheck", "isLineCorrect", null, new Object[]{"1(2(3)"}, "1(2(3)", false));
+                add(new TestParameter<>("LineCheck", "isLineCorrect", null, new Object[]{"1(2(3)4)5"}, "1(2(3)4)5", true));
+
+                add(new TestParameter<>("LineOperation", "collectLines", null, new Object[]{"1+2+4", "3", 1}, "1+2+4 и 3 и 1", "3+4"));
+                add(new TestParameter<>("LineOperation", "collectLines", null, new Object[]{"1+(2+3)+4", "5", 2, 6}, "1+(2+3)+4 и 5 и 2 и 6", "1+5+4"));
+
+                add(new TestParameter<>("LineOperation", "subtraction", null, new Object[]{"1+2-3+4", 3}, "1+2-3+4 и 3", "-1"));
+
+                add(new TestParameter<>("LineOperation", "addition", null, new Object[]{"1-2+3-4", 3}, "1-2+3-4 и 3", "5"));
+
+                add(new TestParameter<>("LineOperation", "division", null, new Object[]{"1-2/3-4", 3}, "1-2/3-4 и 3", "0.67"));
+
+                add(new TestParameter<>("LineOperation", "multiplication", null, new Object[]{"1-2*3-4", 3}, "1-2*3-4 и 3", "6"));
+
+                add(new TestParameter<>("LineOperation", "getResultWithoutRoundBrackets", null, new Object[]{"1+4"}, "1+4", "5"));
+
+                add(new TestParameter<>("LineOperation", "getResultWithRoundBrackets", null, new Object[]{"1+(2+3)+4"}, "1+(2+3)+4", "10"));
+
+                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"1+1"}, "1+1", "2"));
+                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"2+2*2"}, "2+2*2", "6"));
+                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"(2+2)*2"}, "(2+2)*2", "8"));
+                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"-1-1"}, "-1-1", "-2"));
+                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"-1*2+3/4"}, "-1*2+3/4", "-1.25"));
+                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"-1*(2+3)/4"}, "-1*(2+3)/4", "-1.25"));
+
+                add(new TestParameter<>("LineOperation", "concatLines", null, new Object[]{"1", "2"}, "1 и 2", "12"));
+
+                add(new TestParameter<>("LineOperation", "addMinusPrefix", null, new Object[]{"1"}, "1", "-1"));
+
+                add(new TestParameter<>("LineOperation", "removeLastSymbol", null, new Object[]{"1+2+34"}, "1+2+34", "1+2+3"));
+
+                add(new TestParameter<>("LineParsing", "getNumberFromRightPart", null, new Object[]{"1-2", 1}, "1-2 и 1", "1"));
+                add(new TestParameter<>("LineParsing", "getNumberFromRightPart", null, new Object[]{"1.2+3.4*5.6/7.8", 7}, "1.2+3.4*5.6/7.8 и 7", "5.6"));
+                add(new TestParameter<>("LineParsing", "getNumberFromRightPart", null, new Object[]{"1.2+3.4*(-5.6)/7.8", 7}, "1.2+3.4*(-5.6)/7.8 и 7", "-5.6"));
+
+                add(new TestParameter<>("LineParsing", "getNumberFromLeftPart", null, new Object[]{"1-2", 1}, "1-2 и 1", "2"));
+                add(new TestParameter<>("LineParsing", "getNumberFromLeftPart", null, new Object[]{"1.2+3.4*5.6/7.8", 7}, "1.2+3.4*5.6/7.8 и 7", "3.4"));
+                add(new TestParameter<>("LineParsing", "getNumberFromLeftPart", null, new Object[]{"1.2+(-3.4)*5.6/7.8", 10}, "1.2+(-3.4)*5.6/7.8 и 10", "-3.4"));
+
+                add(new TestParameter<>("LineParsing", "findFirstMathSymbol", null, new Object[]{"1.2+3.4*5.6/7.8", 1}, "1.2+3.4*5.6/7.8 и 1", "*"));
+                add(new TestParameter<>("LineParsing", "findFirstMathSymbol", null, new Object[]{"1.2+3.4*5.6/7.8", 2}, "1.2+3.4*5.6/7.8 и 2", "+"));
+                add(new TestParameter<>("LineParsing", "findFirstMathSymbol", null, new Object[]{"1.2+3.4*5.6/7.8"}, "1.2+3.4*5.6/7.8", "*"));
+                add(new TestParameter<>("LineParsing", "findFirstMathSymbol", null, new Object[]{"1.2+3.4-5.6"}, "1.2+3.4-5.6", "+"));
+
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"0"}, "0", true));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"-1"}, "-1", true));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"-1.2"}, "-1.2", true));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"-.1.2."}, "-.1.2.", false));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"-1.2+3.4"}, "-1.2+3.4", false));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"(1)"}, "(1)", false));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"."}, ".", false));
+                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"x"}, "x", false));
+
+                //add(new TestParameter<>("LinePreparing", "removeRoundBrackets", null, new Object[]{"(1)+(-2)+(-3)+(4)"}, "(1)+(-2)+(-3)+(4)", "1+(-2)+(-3)+4"));
+                add(new TestParameter<>("LinePreparing", "removeDuplicates", null, new Object[]{"++++--+--///*//***()-)(++**"}, "++++--+--///*//***()-)(++**", "+/*/*-)*(+*"));
+                add(new TestParameter<>("LinePreparing", "trimTails", null, new Object[]{"++++--+--(1--1)++//**"}, "++++--+--1--1++//**", "-1--1"));
+                add(new TestParameter<>("LinePreparing", "trimTails", null, new Object[]{"++++--+--(1--1)+(1++1)++//**"}, "++++--+--(1--1)+(1++1)++//**", "-(1--1)+(1++1)"));
+                add(new TestParameter<>("LinePreparing", "leaveMathSymbols", null, new Object[]{"+aaaa-1b+b1+cccc"}, "+aaaa-1b--b1+cccc", "-1+1"));
+                add(new TestParameter<>("LinePreparing", "replaceCommas", null, new Object[]{"1,2+3,4"}, "1,2+3,4", "1.2+3.4"));
+                add(new TestParameter<>("LinePreparing", "removeSpaces", null, new Object[]{"1 + 2 - 4"}, "1 + 2 - 4", "1+2-4"));
+                add(new TestParameter<>("LinePreparing", "linePreparing", null, new Object[]{"-- // ++ -- 1 ++ ( ) ++ ( 2 - 4 ) ( 4 ** 5 ) ++"}, "-- // ++ -- 1 ++ ( ) ++ ( 2 - 4 ) ( 4 ** 5 ) ++", "1+(2-4)*(4*5)"));
+            }}
+    );
 
     //------------------------------------------------------------------------------------------------------------------
 
@@ -108,11 +223,32 @@ public class JCalcTest {
             }
             System.out.print("твой выбор: ");
             String classMenuItem = getMenuItem();
-            Class testClass = CLASS_MAP.getOrDefault(classMenuItem, null);
-            if (testClass == null) {
-                System.out.println("Не найден искомый класс, наверное не расскоментирован в JCalcTest или ошибка выбора");
+            if (classMenuItem.equals("9")) {
+                for (Class item : CLASS_MAP.values()) {
+                    if (item.getSimpleName().equalsIgnoreCase("round")) {
+                        testRound(item);
+                    } else {
+                        List<TestParameter> list = TEST_PARAMETER_LIST
+                                .stream()
+                                .collect(Collectors.toList());
+                        for (TestParameter testParameter : list) {
+                            if (testParameter.getResult() instanceof Boolean) {
+                                testLineClassesByBooleanResult(item, testParameter.getMethodName());
+                            } else if (testParameter.getMethodArgumentArray() == null) {
+                                testLineClassesByStringResult(item, testParameter.getMethodName());
+                            } else {
+                                testMathClasses(item);
+                            }
+                        }
+                    }
+                }
             } else {
-                testClass(testClass);
+                Class testClass = CLASS_MAP.getOrDefault(classMenuItem, null);
+                if (testClass == null) {
+                    System.out.println("Не найден искомый класс или ошибка выбора");
+                } else {
+                    testClass(testClass);
+                }
             }
         } else {
             System.out.println("Ни один класс для тестов не найден");
@@ -164,7 +300,7 @@ public class JCalcTest {
 
     private void testMathClasses(Class testClass) {
         System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
-        for (TestParameter testParameter : list.stream().filter(item -> item.getClassName().equals(testClass.getSimpleName())).collect(Collectors.toList())) {
+        for (TestParameter testParameter : TEST_PARAMETER_LIST.stream().filter(item -> item.getClassName().equals(testClass.getSimpleName())).collect(Collectors.toList())) {
             String result = (String) testMethod(testClass, testParameter.getMethodName(), testParameter.getMethodArgumentArray(), testParameter.getMethodValueArray());
             System.out.println("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: '" + result + "', ожидаем: '" + testParameter.getResult() + "' => " + (testParameter.getResult().equals(result) ? "УСПЕХ" : "ПРОВАЛ"));
         }
@@ -247,137 +383,28 @@ public class JCalcTest {
     }
 
     private void testLineClassesByBooleanResult(Class testClass, String methodName) {
-        for (TestParameter testParameter : list.stream().filter(item -> item.getClassName().equals(testClass.getSimpleName())).filter(item -> item.getMethodName().equals(methodName)).collect(Collectors.toList())) {
+        System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
+        for (TestParameter testParameter : TEST_PARAMETER_LIST.stream().filter(item -> item.getClassName().equals(testClass.getSimpleName())).filter(item -> item.getMethodName().equals(methodName)).collect(Collectors.toList())) {
             Boolean result = (Boolean) testMethod(testClass, testParameter.getMethodName(), testParameter.getMethodValueArray());
             System.out.println(
                     result == null ?
-                            ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: 'null' => ПРОВАЛ" ) :
+                            ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: 'null' => ПРОВАЛ") :
                             ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: '" + result + "', ожидаем: '" + testParameter.getResult() + "' => " + (testParameter.getResult().equals(result) ? "УСПЕХ" : "ПРОВАЛ"))
             );
         }
     }
 
     private void testLineClassesByStringResult(Class testClass, String methodName) {
-        for (TestParameter testParameter : list.stream().filter(item -> item.getClassName().equals(testClass.getSimpleName())).filter(item -> item.getMethodName().equals(methodName)).collect(Collectors.toList())) {
+        System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
+        for (TestParameter testParameter : TEST_PARAMETER_LIST.stream().filter(item -> item.getClassName().equals(testClass.getSimpleName())).filter(item -> item.getMethodName().equals(methodName)).collect(Collectors.toList())) {
             String result = (String) testMethod(testClass, testParameter.getMethodName(), testParameter.getMethodValueArray());
             System.out.println(
                     result == null ?
-                            ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: 'null' => ПРОВАЛ" ) :
+                            ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: 'null' => ПРОВАЛ") :
                             ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: '" + result + "', ожидаем: '" + testParameter.getResult() + "' => " + (testParameter.getResult().equals(result) ? "УСПЕХ" : "ПРОВАЛ"))
             );
         }
     }
-
-    //------------------------------------------------------------------------------------------------------------------
-
-    public static final List<TestParameter> list = Collections.unmodifiableList(
-            new ArrayList<TestParameter>() {{
-                add(new TestParameter<>("Addition", "addition", new Class[]{String.class, String.class}, new Object[]{"3", "2"}, "3+2", "5"));
-                add(new TestParameter<>("Addition", "addition", new Class[]{String.class, String.class}, new Object[]{"3", "2.34"}, "3+2.34", "5.34"));
-                add(new TestParameter<>("Addition", "addition", new Class[]{String.class, String.class}, new Object[]{"3.34", "2"}, "3.34+2", "5.34"));
-                add(new TestParameter<>("Addition", "addition", new Class[]{String.class, String.class}, new Object[]{"3.34", "2.11"}, "3.34+2.11", "5.45"));
-
-                add(new TestParameter<>("Division", "division", new Class[]{String.class, String.class}, new Object[]{"5", "3"}, "5/3", "1.67"));
-                add(new TestParameter<>("Division", "division", new Class[]{String.class, String.class}, new Object[]{"2", "1.1"}, "2/1.1", "1.82"));
-                add(new TestParameter<>("Division", "division", new Class[]{String.class, String.class}, new Object[]{"2.2", "3"}, "2.2/3", "0.73"));
-                add(new TestParameter<>("Division", "division", new Class[]{String.class, String.class}, new Object[]{"54.22", "18.02"}, "54.22/18.02", "3.01"));
-
-                add(new TestParameter<>("Multiplication", "multiplication", new Class[]{String.class, String.class}, new Object[]{"5", "3"}, "5*3", "15"));
-                add(new TestParameter<>("Multiplication", "multiplication", new Class[]{String.class, String.class}, new Object[]{"2", "1.1"}, "2*1.1", "2.2"));
-                add(new TestParameter<>("Multiplication", "multiplication", new Class[]{String.class, String.class}, new Object[]{"2.2", "3"}, "2.2*3", "6.6"));
-                add(new TestParameter<>("Multiplication", "multiplication", new Class[]{String.class, String.class}, new Object[]{"54.22", "18.02"}, "54.22*18.02", "977.04"));
-
-                add(new TestParameter<>("Subtraction", "subtraction", new Class[]{String.class, String.class}, new Object[]{"5", "3"}, "5-3", "2"));
-                add(new TestParameter<>("Subtraction", "subtraction", new Class[]{String.class, String.class}, new Object[]{"2", "1.1"}, "2-1.1", "0.9"));
-                add(new TestParameter<>("Subtraction", "subtraction", new Class[]{String.class, String.class}, new Object[]{"2.2", "3"}, "2.2-3", "-0.8"));
-                add(new TestParameter<>("Subtraction", "subtraction", new Class[]{String.class, String.class}, new Object[]{"54.22", "18.02"}, "54.22-18.02", "36.2"));
-
-                add(new TestParameter<>("LineCheck", "isFirstMathSymbol", null, new Object[]{"+1", "+"}, "+1 и +", false));
-                add(new TestParameter<>("LineCheck", "isFirstMathSymbol", null, new Object[]{"-1", "+"}, "-1 и +", true));
-                add(new TestParameter<>("LineCheck", "isLastMathSymbol", null, new Object[]{"1+", "+"}, "1+ и +", false));
-                add(new TestParameter<>("LineCheck", "isLastMathSymbol", null, new Object[]{"1-", "+"}, "1- и +", true));
-
-                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"*1"}, "*1", false));
-                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"1*"}, "1*", false));
-                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"/1"}, "/1", false));
-                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"1/"}, "1/", false));
-                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"+1"}, "+1", false));
-                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"1+"}, "1+", false));
-                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"-1"}, "-1", true));
-                add(new TestParameter<>("LineCheck", "isMathSymbolsCorrect", null, new Object[]{"1-"}, "1-", false));
-
-                add(new TestParameter<>("LineCheck", "isRoundBracketsPositionsCorrect", null, new Object[]{"1)2(3"}, "1)2(3", false));
-                add(new TestParameter<>("LineCheck", "isRoundBracketsPositionsCorrect", null, new Object[]{"1(2)3"}, "1(2)3", true));
-
-                add(new TestParameter<>("LineCheck", "isRoundBracketsCountCorrect", null, new Object[]{"1(2)3)4"}, "1(2)3)4", false));
-                add(new TestParameter<>("LineCheck", "isRoundBracketsCountCorrect", null, new Object[]{"1(2(3)4)5"}, "1(2(3)4)5", true));
-
-                add(new TestParameter<>("LineCheck", "isRoundBracketsCorrect", null, new Object[]{"1234"}, "1234", true));
-                add(new TestParameter<>("LineCheck", "isRoundBracketsCorrect", null, new Object[]{"1(2(3)"}, "1(2(3)", false));
-                add(new TestParameter<>("LineCheck", "isRoundBracketsCorrect", null, new Object[]{"1(2(3)4)5"}, "1(2(3)4)5", true));
-
-                add(new TestParameter<>("LineCheck", "isLineCorrect", null, new Object[]{"-1"}, "-1", true));
-                add(new TestParameter<>("LineCheck", "isLineCorrect", null, new Object[]{"1234"}, "1234", true));
-                add(new TestParameter<>("LineCheck", "isLineCorrect", null, new Object[]{"1(2(3)"}, "1(2(3)", false));
-                add(new TestParameter<>("LineCheck", "isLineCorrect", null, new Object[]{"1(2(3)4)5"}, "1(2(3)4)5", true));
-
-                add(new TestParameter<>("LineOperation", "collectLines", null, new Object[]{"1+2+4", "3", 1}, "1+2+4 и 3 и 1", "3+4"));
-                add(new TestParameter<>("LineOperation", "collectLines", null, new Object[]{"1+(2+3)+4", "5", 2, 6}, "1+(2+3)+4 и 5 и 2 и 6", "1+5+4"));
-
-                add(new TestParameter<>("LineOperation", "subtraction", null, new Object[]{"1+2-3+4", 3}, "1+2-3+4 и 3", "-1"));
-
-                add(new TestParameter<>("LineOperation", "addition", null, new Object[]{"1-2+3-4", 3}, "1-2+3-4 и 3", "5"));
-
-                add(new TestParameter<>("LineOperation", "division", null, new Object[]{"1-2/3-4", 3}, "1-2/3-4 и 3", "0.67"));
-
-                add(new TestParameter<>("LineOperation", "multiplication", null, new Object[]{"1-2*3-4", 3}, "1-2*3-4 и 3", "6"));
-
-                add(new TestParameter<>("LineOperation", "getResultWithoutRoundBrackets", null, new Object[]{"1+4"}, "1+4", "5"));
-
-                add(new TestParameter<>("LineOperation", "getResultWithRoundBrackets", null, new Object[]{"1+(2+3)+4"}, "1+(2+3)+4", "10"));
-
-                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"1+1"}, "1+1", "2"));
-                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"2+2*2"}, "2+2*2", "6"));
-                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"(2+2)*2"}, "(2+2)*2", "8"));
-                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"-1-1"}, "-1-1", "-2"));
-                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"-1*2+3/4"}, "-1*2+3/4", "-1.25"));
-                add(new TestParameter<>("LineOperation", "getResult", null, new Object[]{"-1*(2+3)/4"}, "-1*(2+3)/4", "-1.25"));
-
-                add(new TestParameter<>("LineOperation", "concatLines", null, new Object[]{"1", "2"}, "1 и 2", "12"));
-
-                add(new TestParameter<>("LineOperation", "addMinusPrefix", null, new Object[]{"1"}, "1", "-1"));
-
-                add(new TestParameter<>("LineOperation", "removeLastSymbol", null, new Object[]{"1+2+34"}, "1+2+34", "1+2+3"));
-
-                add(new TestParameter<>("LineParsing", "getNumberFromRightPart", null, new Object[]{"1.2+3.4*5.6/7.8", 7}, "1.2+3.4*5.6/7.8 и 7", "5.6"));
-                add(new TestParameter<>("LineParsing", "getNumberFromRightPart", null, new Object[]{"1.2+3.4*(-5.6)/7.8", 7}, "1.2+3.4*(-5.6)/7.8 и 7", "-5.6"));
-
-                add(new TestParameter<>("LineParsing", "getNumberFromLeftPart", null, new Object[]{"1.2+3.4*5.6/7.8", 7}, "1.2+3.4*5.6/7.8 и 7", "3.4"));
-                add(new TestParameter<>("LineParsing", "getNumberFromLeftPart", null, new Object[]{"1.2+(-3.4)*5.6/7.8", 10}, "1.2+(-3.4)*5.6/7.8 и 10", "-3.4"));
-
-                add(new TestParameter<>("LineParsing", "findFirstMathSymbol", null, new Object[]{"1.2+3.4*5.6/7.8", 1}, "1.2+3.4*5.6/7.8 и 1", "*"));
-                add(new TestParameter<>("LineParsing", "findFirstMathSymbol", null, new Object[]{"1.2+3.4*5.6/7.8", 2}, "1.2+3.4*5.6/7.8 и 2", "+"));
-                add(new TestParameter<>("LineParsing", "findFirstMathSymbol", null, new Object[]{"1.2+3.4*5.6/7.8"}, "1.2+3.4*5.6/7.8", "*"));
-                add(new TestParameter<>("LineParsing", "findFirstMathSymbol", null, new Object[]{"1.2+3.4-5.6"}, "1.2+3.4-5.6", "+"));
-
-                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"0"}, "0", true));
-                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"-1"}, "-1", true));
-                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"-1.2"}, "-1.2", true));
-                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"-.1.2."}, "-.1.2.", false));
-                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"-1.2+3.4"}, "-1.2+3.4", false));
-                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"(1)"}, "(1)", false));
-                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"."}, ".", false));
-                add(new TestParameter<>("LineParsing", "isFinalNumber", null, new Object[]{"x"}, "x", false));
-
-                add(new TestParameter<>("LinePreparing", "removeRoundBrackets", null, new Object[]{"(1)+(-2)+(-3)+(4)"}, "(1)+(-2)+(-3)+(4)", "1+(-2)+(-3)+4"));
-                add(new TestParameter<>("LinePreparing", "removeDuplicates", null, new Object[]{"++++--+--///*//***()-)(++**"}, "++++--+--///*//***()-)(++**", "+/*/*-)*(+*"));
-                add(new TestParameter<>("LinePreparing", "trimTails", null, new Object[]{"++++--+--1--1++//**"}, "++++--+--1--1++//**", "-1+1"));
-                add(new TestParameter<>("LinePreparing", "leaveMathSymbol", null, new Object[]{"+aaaa-1b+b1+cccc"}, "+aaaa-1b--b1+cccc", "-1+1"));
-                add(new TestParameter<>("LinePreparing", "replaceCommas", null, new Object[]{"1,2+3,4"}, "1,2+3,4", "1.2+3.4"));
-                add(new TestParameter<>("LinePreparing", "removeSpaces", null, new Object[]{"1 + 2 - 4"}, "1 + 2 - 4", "1+2-4"));
-                add(new TestParameter<>("LinePreparing", "linePreparing", null, new Object[]{"-- // ++ -- 1 ++ ( ) ++ ( 2 - 4 ) ( 4 ** 5 ) ++"}, "-- // ++ -- 1 ++ ( ) ++ ( 2 - 4 ) ( 4 ** 5 ) ++", "-1+(2-4)*(4*5)"));
-            }}
-    );
 
     //------------------------------------------------------------------------------------------------------------------
 
@@ -484,5 +511,8 @@ public class JCalcTest {
         public void setResult(R result) {
             this.result = result;
         }
+    }
+
+    private static class All {
     }
 }

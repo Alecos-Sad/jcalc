@@ -9,6 +9,7 @@ import edu.javagroup.jcalc.lines.LineParsing;
  */
 
 public class Division {
+
     public static String division(String firstsStr, String secondStr) {
         /**
          * входные параметры: String, String
