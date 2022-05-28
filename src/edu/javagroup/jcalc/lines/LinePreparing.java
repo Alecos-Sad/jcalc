@@ -50,62 +50,52 @@ public class LinePreparing {
     }
 
     //work
-    public static String trimTails(String str) {
-        //возврат пришедшей строки с удаленными лишними символами в начале и в конце строки
-        int countStart = 0;
-        int countFinish = 0;
-        for (int i = 0; i < str.length(); i++) {
-            if (Character.isDigit(str.charAt(i))) {
-                countStart = i;
-                break;
-            }
-        }
-        for (int j = str.length() - 1; j >= 0; j--) {
-            if (Character.isDigit(str.charAt(j))) {
-                countFinish = j + 2;
-                break;
-            }
-        }
-        if ((str.charAt(countStart - 1) == '-') || (str.charAt(countStart - 1) == '(')) {
-            --countStart;
-        } else if ((str.charAt(countStart - 1) == '-') & (str.charAt(countStart - 2) == '(')) {
-            countStart += 2;
-        } else if ((str.charAt(countFinish + 1) == ')')) {
-            ++countFinish;
-        }
+    public static String trimTails(String source) {
+        int indexFirstDigit = 0;
+        int indexLastDigit = 0;
 
-        return removeDuplicates(str.substring(countStart, countFinish));
+        for (int i = 0; i < source.length(); i++) {
+            if (Character.isDigit(source.charAt(i))) {
+                indexFirstDigit = i;
+                break;
+            }
+        }
+        for (int j = source.length() - 1; j > 0; j--) {
+            if (Character.isDigit(source.charAt(j))) {
+                indexLastDigit = j;
+                break;
+            }
+        }
+        int indexStart = source.indexOf('(') > -1 && indexFirstDigit > 0 && source.charAt(indexFirstDigit - 1) == '(' ?
+                indexFirstDigit - 1 : indexFirstDigit;
+        indexStart = indexFirstDigit > 0 && source.charAt(indexFirstDigit - 1) == '-' ?
+                indexFirstDigit - 1 : indexStart;
+
+        int indexFinish = source.indexOf(')', indexLastDigit) > -1 ?
+                source.lastIndexOf(')') + 1 : indexLastDigit + 1;
+
+        source = indexFirstDigit > 1 && source.charAt(indexFirstDigit - 1) == '(' && source.charAt(indexFirstDigit - 2) == '-' ?
+                source.substring(indexFirstDigit - 2, indexFinish) : source.substring(indexStart, indexFinish);
+
+        return source;
+
     }
 
-    public static String removeDuplicates(String str) {
-        //возврат пришедшей строки в которой все дубликаты символов * / + - заменены на единичные
-        for (int i = 1; i < str.length(); i++) {
-            if (str.contains("++")) {
-                str = str.replace("++", "+");
-            }
-            if (str.contains("--")) {
-                str = str.replace("--", "+");
-            }
-            if (str.contains("+-")) {
-                str = str.replace("+-", "-");
-            }
-            if (str.contains("-+")) {
-                str = str.replace("-+", "-");
-            }
-            if (str.contains("**")) {
-                str = str.replace("**", "*");
-            }
-            if (str.contains(")(")) {
-                str = str.replace(")(", ")*(");
-            }
-            if (str.contains("()")) {
-                str = str.replace("()", "");
-            }
-            if (str.contains("//")) {
-                str = str.replace("//", "/");
-            }
+    public static String removeDuplicates(String source) {
+
+        while (source.contains("++") || source.contains("--") || source.contains("+-") || source.contains("-+") ||
+                source.contains("**") || source.contains(")(") || source.contains("()") || source.contains("//")) {
+            source = source.replace("++", "+");
+            source = source.replace("--", "-");
+            source = source.replace("+-", "-");
+            source = source.replace("-+", "-");
+            source = source.replace("**", "*");
+            source = source.replace(")(", ")*(");
+            source = source.replace("()", "");
+            source = source.replace("//", "/");
+            source = source.replace("--", "+");
         }
-        return str;
+        return source;
     }
 }
 
