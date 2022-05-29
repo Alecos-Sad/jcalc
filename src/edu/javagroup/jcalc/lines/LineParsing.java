@@ -34,64 +34,38 @@ public class LineParsing {
         return "";
     }
 
-    public static String getNumberFromLeftPart(String string, int position) {
+    public static String getNumberFromLeftPart(String source, int position) {
 
-        string = string.substring(0, position);
-
-        if (string.contains(")")) {
-            for (int i = string.length() - 1; i >= 0; i--) {
-                if (string.charAt(i) == ')') {
-                    string = string.substring(0, i + 1);
-                    break;
-                }
+        StringBuilder result = new StringBuilder();
+        for (int i = position - 1; i >= 0; i--) {
+            if (source.charAt(i) == ')') {
+                continue;
+            }
+            if (Character.isDigit(source.charAt(i)) || source.charAt(i) == '.' ||
+                    source.charAt(i) == '-') {
+                result.append(source.charAt(i));
+            } else {
+                break;
             }
         }
-        if (string.contains("("))
-            for (int j = 0; j < string.length(); j++) {
-                if (string.charAt(j) == '(') {
-                    string = string.substring(j + 1, string.length() - 1);
-                    return string;
-                }
-            }
-        for (int j = string.length() - 1; j > 0; j--) {
-            if ((string.charAt(j) == '-') || (string.charAt(j) == '/') ||
-                    (string.charAt(j) == '+') || (string.charAt(j) == '*')) {
-                string = string.substring(j + 1);
-                return string;
-            }
-        }
-        return string;
+        return result.reverse().toString();
     }
 
-    public static String getNumberFromRightPart(String string, int position) {
+    public static String getNumberFromRightPart(String source, int position) {
 
-        string = string.substring(position + 1);
-
-        while (string.contains("(")) {
-            for (int i = 0; i < string.length(); i++) {
-                if (string.charAt(i) == '(') {
-                    string = string.substring(i + 1);
-                    break;
-                }
+        StringBuilder result = new StringBuilder();
+        for (int i = position + 1; i <= source.length() - 1; i++) {
+            if (source.charAt(i) == '(') {
+                continue;
+            }
+            if (Character.isDigit(source.charAt(i)) || source.charAt(i) == '.' ||
+                    source.charAt(i) == '-') {
+                result.append(source.charAt(i));
+            } else {
+                break;
             }
         }
-        if (string.contains(")"))
-            for (int j = 0; j < string.length(); j++) {
-                if (string.charAt(j) == ')') {
-                    string = string.substring(0, j);
-                    return string;
-                }
-            }
-        for (int j = 0; j < string.length() - 1; j++) {
-            if ((string.charAt(j) == '-') || (string.charAt(j) == '/') ||
-                    (string.charAt(j) == '+') || (string.charAt(j) == '*')) {
-
-                string = string.substring(0, j);
-
-                return string;
-            }
-        }
-        return string;
+        return result.toString();
     }
 
     public static int getInteger(String str) {
