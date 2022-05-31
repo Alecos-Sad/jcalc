@@ -34,22 +34,23 @@ public class LineParsing {
         return "";
     }
 
-    public static String getNumberFromLeftPart(String str, int position) {
-        StringBuilder result = new StringBuilder();
+    public static String getNumberFromLeftPart(String source, int position) {
 
+        StringBuilder result = new StringBuilder();
         for (int i = position - 1; i >= 0; i--) {
-            if (str.charAt(i) == '(') {
+            if (source.charAt(i) == ')') {
                 continue;
             }
-            if (Character.isDigit(str.charAt(i)) || str.charAt(i) == '.' ||
-                    str.charAt(i) == '-') {
-                result.append(str.charAt(i));
+            if (Character.isDigit(source.charAt(i)) || source.charAt(i) == '.' ||
+                    source.charAt(i) == '-') {
+                result.append(source.charAt(i));
             } else {
                 break;
             }
         }
         return result.reverse().toString();
     }
+
 
     public static String getNumberFromRightPart(String str, int position) {
 
