@@ -1,5 +1,7 @@
 package edu.javagroup.jcalc;
 
+import edu.javagroup.jcalc.frame.JCalcFrame;
+
 /**
  * @author kaa
  * @version  1.2

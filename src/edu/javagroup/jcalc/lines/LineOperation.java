@@ -6,23 +6,20 @@ import edu.javagroup.jcalc.digits.Multiplication;
 import edu.javagroup.jcalc.digits.Subtraction;
 
 public class LineOperation {
-    //work
-    private static String removeLastSymbol(String source) {
+
+    public static String removeLastSymbol(String source) {
         return source.substring(0, source.length() - 1);
     }
 
-    //work
-    private static String addMinusPrefix(String source) {
+    public static String addMinusPrefix(String source) {
         return "-" + source;
     }
 
-    //work
-    private static String concatLines(String sourceOne, String sourceTwo) {
+    public static String concatLines(String sourceOne, String sourceTwo) {
         return sourceOne + sourceTwo;
     }
 
-    //FALSE
-    private static String getResult(String source) {
+    public static String getResult(String source) {
         if (source == null && source.isEmpty()) {
             return "";
         } else {
@@ -39,80 +36,115 @@ public class LineOperation {
         }
     }
 
-    //false
-    private static String getResultWithRoundBrackets(String source) {
-        while (source.indexOf("(") >= 0) {
+    public static String getResultWithRoundBrackets(String source) {
+        while (source.contains("(") || source.contains(")")) {
             if (LineParsing.isFinalNumber(source)) {
                 return source;
             }
             int openBracketIndex = source.lastIndexOf("(");
             int closeBracketIndex = source.indexOf(")", openBracketIndex);
-            String result = source.substring(openBracketIndex + 1, closeBracketIndex);
-            result = LinePreparing.linePreparing(result);
-            result = getResultWithoutRoundBrackets(result);
-            if (result.isEmpty()) {
+            String stringInBrackets = source.substring(openBracketIndex + 1, closeBracketIndex);
+            stringInBrackets = LinePreparing.linePreparing(stringInBrackets);
+            stringInBrackets = getResultWithoutRoundBrackets(stringInBrackets);
+            if (stringInBrackets.isEmpty()) {
                 break;
+
             }
-            source = collectLines(source, result, openBracketIndex, closeBracketIndex);
+            source = collectLines(source, stringInBrackets, openBracketIndex, closeBracketIndex);
         }
-        return source;
+        return getResultWithoutRoundBrackets(source);
     }
 
-    //false
-    private static String getResultWithoutRoundBrackets(String str) {
+    public static String getResultWithoutRoundBrackets(String stringWithoutBrackets) {
+        while (stringWithoutBrackets.contains("/") || stringWithoutBrackets.contains("-") ||
+                stringWithoutBrackets.contains("*") || (stringWithoutBrackets.contains("+"))) {
 
-        String symbol = LineParsing.findFirstMathSymbol(str);
-        int pos = 0;
-        for (int i = 0; i < str.length(); i++) {
-            if (str.contains("(")) {
-                pos = i;
-                break;
+            if (LineParsing.isFinalNumber(stringWithoutBrackets)) {
+                return stringWithoutBrackets;
             }
-            switch (String.valueOf(pos + 1)) {
+            String symbol = LineParsing.findFirstMathSymbol(stringWithoutBrackets);
+            if (symbol.isEmpty()) {
+                return "";
+            }
+            stringWithoutBrackets = stringWithoutBrackets.startsWith("-") ?
+                    stringWithoutBrackets.substring(1) : stringWithoutBrackets;
+            int symbolIndex = stringWithoutBrackets.indexOf(symbol);
+            String result = "";
+
+            switch (symbol) {
+                case "*":
+                    result = multiplication(stringWithoutBrackets, symbolIndex);
+                    break;
+                case "/":
+                    result = division(stringWithoutBrackets, symbolIndex);
+                    break;
                 case "+":
-                    return addition(str, pos);
+                    result = addition(stringWithoutBrackets, symbolIndex);
+                    break;
                 case "-":
-                    return subtraction(str, pos);
+                    result = subtraction(stringWithoutBrackets, symbolIndex);
+            }
+            stringWithoutBrackets = collectLines(stringWithoutBrackets, result, symbolIndex);
+            stringWithoutBrackets = stringWithoutBrackets.contains("--") ?
+                    stringWithoutBrackets.replace("--", "+") : stringWithoutBrackets;
+            if (stringWithoutBrackets.contains(".")) {
+                int pointIndex = stringWithoutBrackets.indexOf(".");
+                String s = stringWithoutBrackets.substring(pointIndex + 1);
+                int zero = Integer.parseInt(s);
+                stringWithoutBrackets = zero == 0 ?
+                        stringWithoutBrackets.substring(0, pointIndex) : stringWithoutBrackets;
             }
         }
-
-
-        return str;
+        return stringWithoutBrackets;
     }
 
-    //work
-    private static String multiplication(String source, int symbolIndex) {
+
+    public static String multiplication(String source, int symbolIndex) {
         return Multiplication.multiplication(LineParsing.getNumberFromLeftPart(source, symbolIndex),
                 LineParsing.getNumberFromRightPart(source, symbolIndex));
     }
 
-    //work
-    private static String division(String source, int symbolIndex) {
+    public static String division(String source, int symbolIndex) {
         return Division.division(LineParsing.getNumberFromLeftPart(source, symbolIndex),
                 LineParsing.getNumberFromRightPart(source, symbolIndex));
     }
 
-
-    //work
-    private static String addition(String source, int symbolIndex) {
+    public static String addition(String source, int symbolIndex) {
         return Addition.addition(LineParsing.getNumberFromLeftPart(source, symbolIndex),
                 LineParsing.getNumberFromRightPart(source, symbolIndex));
     }
 
-    //work
-    private static String subtraction(String source, int symbolIndex) {
+    public static String subtraction(String source, int symbolIndex) {
         return Subtraction.subtraction(LineParsing.getNumberFromLeftPart(source, symbolIndex),
                 LineParsing.getNumberFromRightPart(source, symbolIndex));
     }
 
-    //work
-    private static String collectLines(String source, String result, int symbolIndex) {
-        return source.substring(0, source.indexOf(LineParsing.getNumberFromLeftPart(source, symbolIndex))) + result +
-                source.substring(source.indexOf(LineParsing.getNumberFromRightPart(source, symbolIndex)) + 1);
+    public static String collectLines(String sourceWithoutBrackets, String result, int symbolIndex) {
+        StringBuilder stringBuilder = new StringBuilder(sourceWithoutBrackets);
+        int leftCount = 0;
+        int rightCount = 0;
+        if (sourceWithoutBrackets.contains(".")) {
+
+            for (int i = symbolIndex - 1; i >= 0; i--) {
+                if (Character.isDigit(sourceWithoutBrackets.charAt(i)) ||
+                        sourceWithoutBrackets.charAt(i) == '.') {
+                    leftCount++;
+                }
+            }
+            for (int i = symbolIndex + 1; i < sourceWithoutBrackets.length(); i++) {
+                if (Character.isDigit(sourceWithoutBrackets.charAt(i)) ||
+                        sourceWithoutBrackets.charAt(i) == '.') {
+                    rightCount++;
+                }
+            }
+            return stringBuilder.replace(symbolIndex - leftCount, symbolIndex + rightCount + 1, result).toString();
+        }
+        return stringBuilder.replace(symbolIndex - 1, symbolIndex + 2, result).toString();
     }
 
-    //work
-    private static String collectLines(String str, String result, int openBracketIndex, int closeBracketIndex) {
-        return str.substring(0, openBracketIndex) + result + str.substring(closeBracketIndex + 1);
+    public static String collectLines(String source, String result, int openBracketIndex, int closeBracketIndex) {
+        StringBuilder stringBuilder = new StringBuilder(source);
+        stringBuilder.replace(openBracketIndex, closeBracketIndex + 1, result);
+        return stringBuilder.toString();
     }
 }

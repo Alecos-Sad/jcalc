@@ -34,16 +34,16 @@ public class LineParsing {
         return "";
     }
 
-    public static String getNumberFromLeftPart(String source, int position) {
-
+    public static String getNumberFromLeftPart(String str, int position) {
         StringBuilder result = new StringBuilder();
+
         for (int i = position - 1; i >= 0; i--) {
-            if (source.charAt(i) == ')') {
+            if (str.charAt(i) == '(') {
                 continue;
             }
-            if (Character.isDigit(source.charAt(i)) || source.charAt(i) == '.' ||
-                    source.charAt(i) == '-') {
-                result.append(source.charAt(i));
+            if (Character.isDigit(str.charAt(i)) || str.charAt(i) == '.' ||
+                    str.charAt(i) == '-') {
+                result.append(str.charAt(i));
             } else {
                 break;
             }
@@ -51,16 +51,16 @@ public class LineParsing {
         return result.reverse().toString();
     }
 
-    public static String getNumberFromRightPart(String source, int position) {
+    public static String getNumberFromRightPart(String str, int position) {
 
         StringBuilder result = new StringBuilder();
-        for (int i = position + 1; i <= source.length() - 1; i++) {
-            if (source.charAt(i) == '(') {
+        for (int i = position + 1; i <= str.length() - 1; i++) {
+            if (str.charAt(i) == ')' || str.charAt(i) == '(') {
                 continue;
             }
-            if (Character.isDigit(source.charAt(i)) || source.charAt(i) == '.' ||
-                    source.charAt(i) == '-') {
-                result.append(source.charAt(i));
+            if (Character.isDigit(str.charAt(i)) || str.charAt(i) == '.' ||
+                    str.charAt(i) == '-') {
+                result.append(str.charAt(i));
             } else {
                 break;
             }

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author kaa
- * @version 3.1
+ * @version 4.0
  */
 public class JCalcTest {
 
@@ -180,11 +180,14 @@ public class JCalcTest {
 
                 add(new TestParameter<>("LineOperation", "removeLastSymbol", null, new Object[]{"1+2+34"}, "1+2+34", "1+2+3"));
 
-                add(new TestParameter<>("LineParsing", "getNumberFromRightPart", null, new Object[]{"1-2", 1}, "1-2 и 1", "1"));
+                add(new TestParameter<>("LineParsing", "getNumberFromRightPart", null, new Object[]{"1-2", 1}, "1-2 и 1", "2"));
+                add(new TestParameter<>("LineParsing", "getNumberFromRightPart", null, new Object[]{"1-2-3", 1}, "1-2-3 и 1", "2"));
                 add(new TestParameter<>("LineParsing", "getNumberFromRightPart", null, new Object[]{"1.2+3.4*5.6/7.8", 7}, "1.2+3.4*5.6/7.8 и 7", "5.6"));
                 add(new TestParameter<>("LineParsing", "getNumberFromRightPart", null, new Object[]{"1.2+3.4*(-5.6)/7.8", 7}, "1.2+3.4*(-5.6)/7.8 и 7", "-5.6"));
 
-                add(new TestParameter<>("LineParsing", "getNumberFromLeftPart", null, new Object[]{"1-2", 1}, "1-2 и 1", "2"));
+                add(new TestParameter<>("LineParsing", "getNumberFromLeftPart", null, new Object[]{"1-2", 1}, "1-2 и 1", "1"));
+                add(new TestParameter<>("LineParsing", "getNumberFromLeftPart", null, new Object[]{"-1-2+3", 2}, "-1-2 и 2", "-1"));
+                add(new TestParameter<>("LineParsing", "getNumberFromLeftPart", null, new Object[]{"-1-2*3", 4}, "-1-2*3 и 4", "2"));
                 add(new TestParameter<>("LineParsing", "getNumberFromLeftPart", null, new Object[]{"1.2+3.4*5.6/7.8", 7}, "1.2+3.4*5.6/7.8 и 7", "3.4"));
                 add(new TestParameter<>("LineParsing", "getNumberFromLeftPart", null, new Object[]{"1.2+(-3.4)*5.6/7.8", 10}, "1.2+(-3.4)*5.6/7.8 и 10", "-3.4"));
 
@@ -204,12 +207,12 @@ public class JCalcTest {
 
                 //add(new TestParameter<>("LinePreparing", "removeRoundBrackets", null, new Object[]{"(1)+(-2)+(-3)+(4)"}, "(1)+(-2)+(-3)+(4)", "1+(-2)+(-3)+4"));
                 add(new TestParameter<>("LinePreparing", "removeDuplicates", null, new Object[]{"++++--+--///*//***()-)(++**"}, "++++--+--///*//***()-)(++**", "+/*/*-)*(+*"));
-                add(new TestParameter<>("LinePreparing", "trimTails", null, new Object[]{"++++--+--(1--1)++//**"}, "++++--+--1--1++//**", "-1--1"));
+                add(new TestParameter<>("LinePreparing", "trimTails", null, new Object[]{"++++--+--1--1++//**"}, "++++--+--1--1++//**", "-1--1"));
                 add(new TestParameter<>("LinePreparing", "trimTails", null, new Object[]{"++++--+--(1--1)+(1++1)++//**"}, "++++--+--(1--1)+(1++1)++//**", "-(1--1)+(1++1)"));
                 add(new TestParameter<>("LinePreparing", "leaveMathSymbols", null, new Object[]{"+aaaa-1b+b1+cccc"}, "+aaaa-1b--b1+cccc", "-1+1"));
                 add(new TestParameter<>("LinePreparing", "replaceCommas", null, new Object[]{"1,2+3,4"}, "1,2+3,4", "1.2+3.4"));
                 add(new TestParameter<>("LinePreparing", "removeSpaces", null, new Object[]{"1 + 2 - 4"}, "1 + 2 - 4", "1+2-4"));
-                add(new TestParameter<>("LinePreparing", "linePreparing", null, new Object[]{"-- // ++ -- 1 ++ ( ) ++ ( 2 - 4 ) ( 4 ** 5 ) ++"}, "-- // ++ -- 1 ++ ( ) ++ ( 2 - 4 ) ( 4 ** 5 ) ++", "1+(2-4)*(4*5)"));
+                add(new TestParameter<>("LinePreparing", "linePreparing", null, new Object[]{"-- // ++ -- 1 ++ ( ) ++ ( 2 - 4 ) ( 4 ** 5 ) ++"}, "-- // ++ -- 1 ++ ( ) ++ ( 2 - 4 ) ( 4 ** 5 ) ++", "-1+(2-4)*(4*5)"));
             }}
     );
 
@@ -217,7 +220,7 @@ public class JCalcTest {
 
     public void startTest() {
         if (!CLASS_MAP.isEmpty()) {
-            System.out.println("--- Выбери класс ---------------------------------------------");
+            System.out.println("--- Выбери класс ----------------------------------------------");
             for (Map.Entry<String, Class> item : CLASS_MAP.entrySet()) {
                 System.out.println(item.getKey() + " - " + item.getValue().getSimpleName());
             }
@@ -230,8 +233,15 @@ public class JCalcTest {
                     } else {
                         List<TestParameter> list = TEST_PARAMETER_LIST
                                 .stream()
+                                .filter(value -> value.getClassName().equalsIgnoreCase(item.getSimpleName()))
                                 .collect(Collectors.toList());
+                        String lastName = "";
                         for (TestParameter testParameter : list) {
+                            if (testParameter.getMethodName().equals(lastName)) {
+                                continue;
+                            } else {
+                                lastName = testParameter.getMethodName();
+                            }
                             if (testParameter.getResult() instanceof Boolean) {
                                 testLineClassesByBooleanResult(item, testParameter.getMethodName());
                             } else if (testParameter.getMethodArgumentArray() == null) {
@@ -295,14 +305,14 @@ public class JCalcTest {
     private void testRound(Class testClass) {
         System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
         Double result = (Double) testMethod(testClass, "round", new Object[]{1.10601});
-        System.out.println("Метод: round, отправлено: '1.10601', получено: '" + result + "', ожидаем: '1.11' => " + (result != null && result == 1.11 ? "УСПЕХ" : "ПРОВАЛ"));
+        System.out.println((result != null && result == 1.11 ? "УСПЕХ : " : "ПРОВАЛ: ") + "Метод: round, отправлено: '1.10601', получено: '" + result + "', ожидаем: '1.11'");
     }
 
     private void testMathClasses(Class testClass) {
         System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
         for (TestParameter testParameter : TEST_PARAMETER_LIST.stream().filter(item -> item.getClassName().equals(testClass.getSimpleName())).collect(Collectors.toList())) {
             String result = (String) testMethod(testClass, testParameter.getMethodName(), testParameter.getMethodArgumentArray(), testParameter.getMethodValueArray());
-            System.out.println("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: '" + result + "', ожидаем: '" + testParameter.getResult() + "' => " + (testParameter.getResult().equals(result) ? "УСПЕХ" : "ПРОВАЛ"));
+            System.out.println((testParameter.getResult().equals(result) ? "УСПЕХ : " : "ПРОВАЛ: ") + "Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: '" + result + "', ожидаем: '" + testParameter.getResult() + "'");
         }
     }
 
@@ -310,15 +320,24 @@ public class JCalcTest {
         Method[] methodArray = testClass.getDeclaredMethods();
         Arrays.sort(methodArray, Comparator.comparing(Method::getName));
         if (methodArray.length > 0) {
-            System.out.println("--- Выбери метод ---------------------------------------------");
+            System.out.println("--- Выбери метод ----------------------------------------------");
             for (int i = 0; i < methodArray.length; i++) {
                 System.out.println(i + " - " + methodArray[i].getName());
             }
             System.out.print("твой выбор: ");
             String menuItem = getMenuItem();
-            int menuNumber = Integer.parseInt(menuItem);
-            System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
-            testLineClassesByBooleanResult(testClass, methodArray[menuNumber].getName());
+            menuItem = menuItem == null ? "" : menuItem.replaceAll("[^\\d]", "");
+            if (menuItem.length() > 0) {
+                int menuNumber = Integer.parseInt(menuItem);
+                if (menuNumber > methodArray.length - 1) {
+                    System.out.println("Такого номера нет");
+                    System.exit(0);
+                }
+                testLineClassesByBooleanResult(testClass, methodArray[menuNumber].getName());
+            } else {
+                System.out.println("Укажи номер");
+                System.exit(0);
+            }
         } else {
             System.out.println("В классе " + testClass.getSimpleName() + ", методы не обнаружены");
             startTest();
@@ -335,8 +354,18 @@ public class JCalcTest {
             }
             System.out.print("твой выбор: ");
             String menuItem = getMenuItem();
-            int menuNumber = Integer.parseInt(menuItem);
-            testLineParsing(testClass, methodArray[menuNumber].getName());
+            menuItem = menuItem == null ? "" : menuItem.replaceAll("[^\\d]", "");
+            if (menuItem.length() > 0) {
+                int menuNumber = Integer.parseInt(menuItem);
+                if (menuNumber > methodArray.length - 1) {
+                    System.out.println("Такого номера нет");
+                    System.exit(0);
+                }
+                testLineParsing(testClass, methodArray[menuNumber].getName());
+            } else {
+                System.out.println("Укажи номер");
+                System.exit(0);
+            }
         } else {
             System.out.println("В классе " + testClass.getSimpleName() + ", методы не обнаружены");
             startTest();
@@ -344,7 +373,7 @@ public class JCalcTest {
     }
 
     private void testLineParsing(Class testClass, String methodName) {
-        System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
+        //System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
         switch (methodName) {
             case "getNumberFromRightPart":
             case "getNumberFromLeftPart":
@@ -373,9 +402,18 @@ public class JCalcTest {
             }
             System.out.print("твой выбор: ");
             String menuItem = getMenuItem();
-            int menuNumber = Integer.parseInt(menuItem);
-            System.out.println("--- " + testClass.getSimpleName() + " ---------------------------------------------");
-            testLineClassesByStringResult(testClass, methodArray[menuNumber].getName());
+            menuItem = menuItem == null ? "" : menuItem.replaceAll("[^\\d]", "");
+            if (menuItem.length() > 0) {
+                int menuNumber = Integer.parseInt(menuItem);
+                if (menuNumber > methodArray.length - 1) {
+                    System.out.println("Такого номера нет");
+                    System.exit(0);
+                }
+                testLineClassesByStringResult(testClass, methodArray[menuNumber].getName());
+            } else {
+                System.out.println("Укажи номер");
+                System.exit(0);
+            }
         } else {
             System.out.println("В классе " + testClass.getSimpleName() + ", методы не обнаружены");
             startTest();
@@ -388,8 +426,8 @@ public class JCalcTest {
             Boolean result = (Boolean) testMethod(testClass, testParameter.getMethodName(), testParameter.getMethodValueArray());
             System.out.println(
                     result == null ?
-                            ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: 'null' => ПРОВАЛ") :
-                            ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: '" + result + "', ожидаем: '" + testParameter.getResult() + "' => " + (testParameter.getResult().equals(result) ? "УСПЕХ" : "ПРОВАЛ"))
+                            ("ПРОВАЛ: Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: 'null'") :
+                            ((testParameter.getResult().equals(result) ? "УСПЕХ : " : "ПРОВАЛ: ") + "Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: '" + result + "', ожидаем: '" + testParameter.getResult() + "'")
             );
         }
     }
@@ -400,8 +438,8 @@ public class JCalcTest {
             String result = (String) testMethod(testClass, testParameter.getMethodName(), testParameter.getMethodValueArray());
             System.out.println(
                     result == null ?
-                            ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: 'null' => ПРОВАЛ") :
-                            ("Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: '" + result + "', ожидаем: '" + testParameter.getResult() + "' => " + (testParameter.getResult().equals(result) ? "УСПЕХ" : "ПРОВАЛ"))
+                            ("ПРОВАЛ: Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: 'null'") :
+                            ((testParameter.getResult().equals(result) ? "УСПЕХ : " : "ПРОВАЛ: ") + "Метод: " + testParameter.getMethodName() + ", отправлено: '" + testParameter.getValue() + "', получено: '" + result + "', ожидаем: '" + testParameter.getResult() + "'")
             );
         }
     }
@@ -419,8 +457,11 @@ public class JCalcTest {
                     return method.invoke(testClass, parameterValueArray);
                 }
             }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException exception) {
-            exception.printStackTrace();
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
+//            System.out.println("---------------------------------------------------------------");
+//            System.out.println(testClass.getSimpleName() + ", " + methodName + ": " + ex.getMessage());
+//            System.out.println("---------------------------------------------------------------");
+            //exception.printStackTrace();
         }
         return null;
     }
@@ -435,8 +476,11 @@ public class JCalcTest {
                     return method.invoke(testClass, parameterValueArray);
                 }
             }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException exception) {
-            exception.printStackTrace();
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
+//            System.out.println("---------------------------------------------------------------");
+//            System.out.println(testClass.getSimpleName() + ", " + methodName + ": " + ex.getMessage());
+//            System.out.println("---------------------------------------------------------------");
+            //exception.printStackTrace();
         }
         return null;
     }
