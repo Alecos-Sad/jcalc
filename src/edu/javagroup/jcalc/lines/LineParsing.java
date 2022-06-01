@@ -1,7 +1,14 @@
 package edu.javagroup.jcalc.lines;
 
+/**
+ * Класс для парсинга строки
+ */
+
 public class LineParsing {
 
+    /**
+     * метод возвращает строку содержащую символ математической операции
+     */
     public static String findFirstMathSymbol(String str) {
 
         if (str.startsWith("-")) {
@@ -16,7 +23,12 @@ public class LineParsing {
         return "";
     }
 
+    /**
+     * метод получает два параметра, первый - строка содержащая математическое
+     * выражение, второй - приоритет, разбирая строку посимвольно
+     */
     public static String findFirstMathSymbol(String string, int priority) {
+
         if (priority == 1) {
             for (int i = 0; i < string.length(); i++) {
                 if ((string.charAt(i) == '/') || (string.charAt(i) == '*')) {
@@ -34,6 +46,11 @@ public class LineParsing {
         return "";
     }
 
+    /**
+     * метод получает два параметра:
+     * строка содержащая математическое выражение и координату математического символа (* / + -)
+     * основываясь на положении этого символа в строке, возращает число находящееся левее этого символа
+     */
     public static String getNumberFromLeftPart(String source, int position) {
 
         StringBuilder result = new StringBuilder();
@@ -51,7 +68,11 @@ public class LineParsing {
         return result.reverse().toString();
     }
 
-
+    /**
+     * метод получает два параметра:
+     * строка содержащая математическое выражение и координату математического символа (* / + -)
+     * основываясь на положении этого символа в строке, возвращает число находящееся правее этого символа
+     */
     public static String getNumberFromRightPart(String str, int position) {
 
         StringBuilder result = new StringBuilder();
@@ -77,7 +98,11 @@ public class LineParsing {
         return Double.parseDouble(str.trim());
     }
 
+    /**
+     * в метод приходит строка, в ней допустимы только следующий набор символов: 0123456789-.
+     */
     public static boolean isFinalNumber(String string) {
+
         for (int i = 0; i < string.length(); i++) {
             if (!(Character.isDigit(string.charAt(i)) || !(string.charAt(i) == '-') ||
                     !(string.charAt(i) == '.'))) {

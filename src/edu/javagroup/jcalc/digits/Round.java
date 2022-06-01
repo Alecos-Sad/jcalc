@@ -11,7 +11,9 @@ import java.math.RoundingMode;
 
 public class Round {
 
-    /** количество знаков после запятой */
+    /**
+     * принимает число, которое округляет до двух (используется константа обьявленная выше)
+     */
     public static final int CONST_ROUND = 2;
 
     public static double round(double value) {

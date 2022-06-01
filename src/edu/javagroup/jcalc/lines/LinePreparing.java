@@ -1,10 +1,21 @@
 package edu.javagroup.jcalc.lines;
 
+/**
+ * Класс для подготовки строки
+ */
+
 public class LinePreparing {
 
+    /**
+     * 1. если строка содержит пробелы, получить результат работы метода removeSpaces, записать
+     * результат в вашу строку
+     * 2. если строка содержит запятые, получить результат работы метода replaceCommas записать
+     * результат в вашу строку
+     * 3. записать в вашу строку результат работы метода leaveMathSymbols
+     * 4. если строка начинается на символ +, убрать этот символ за ненадобностью
+     * 5. вернуть строку
+     */
     public static String linePreparing(String str) {
-// Таск 4 - Обработка пришедшей строки, с ее подготовкой для дальнейших операций в классах рассчетов.
-
         if (str.contains(" ")) {
             str = removeSpaces(str);
         }
@@ -18,27 +29,32 @@ public class LinePreparing {
         return str;
     }
 
-    //work
+    /**
+     * возвращает пришедшую строку без пробелов
+     */
     public static String removeSpaces(String str) {
-        //возврат пришедшей строки с удаленными пробелами
         if (str.contains(" ")) {
             str = str.replace(" ", "");
         }
         return str;
     }
 
-    //work
+    /**
+     * возвращает пришедшую строку, в которой все запятые заменены на точки
+     */
     public static String replaceCommas(String str) {
-        // возврат пришедшей строки в которой все запятые заменены на точки
         if (str.contains(",")) {
             str = str.replace(",", ".");
         }
         return str;
     }
 
-    //work
+    /**
+     * обрабатывает пришедшую строку, так, чтобы она содержала, только допустимые символы:
+     * обработать полученную строку в методе trimTails
+     * полученный результат вернуть в методе removeDuplicates
+     */
     public static String leaveMathSymbol(String str) {
-        //возврат пришедшей строки содержащей только 0123456789.()*/+- и обработанной в методе trimTails
         StringBuilder result = new StringBuilder();
         String value = "0123456789.()*/+-";
         for (int i = 0; i < str.length(); i++) {
@@ -49,7 +65,11 @@ public class LinePreparing {
         return removeDuplicates(trimTails(result.toString()));
     }
 
-    //work
+    /**
+     * удаляет из строки лишние символы в начале и в конце строки
+     * 1. учитывает минус перед самой первой цифрой
+     * 2. учитывает наличие скобок
+     */
     public static String trimTails(String source) {
         int indexFirstDigit = 0;
         int indexLastDigit = 0;
@@ -78,9 +98,11 @@ public class LinePreparing {
                 source.substring(indexFirstDigit - 2, indexFinish) : source.substring(indexStart, indexFinish);
 
         return source;
-
     }
 
+    /**
+     * получить строку, в которой все дубликаты символов * / + - заменены на единичные
+     */
     public static String removeDuplicates(String source) {
 
         while (source.contains("++") || source.contains("--") || source.contains("+-") || source.contains("-+") ||
